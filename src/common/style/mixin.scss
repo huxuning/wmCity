@@ -1,0 +1,61 @@
+@mixin border-retina($color, $direction: bottom) {
+  position: relative;
+  &:after {
+    content: ' ';
+    display: block;
+    position: absolute;
+    
+    @if $direction == top {
+      border-top: 1px solid $color;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+    @if $direction == bottom {
+      border-bottom: 1px solid $color;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
+    @if $direction == right {
+      border-right: 1px solid $color;
+      right: 0;
+      top: 0;
+      height: 100%;
+    }
+    @if $direction == left {
+      border-left: 1px solid $color;
+      left: 0;
+      top: 0;
+      height: 100%;
+    }
+  }
+}
+
+@mixin overlay($isTransparent: false) {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.6);
+  @if $isTransparent == true {
+    background: none;
+  }
+}
+
+@mixin ellipsis($number: 1) {
+  overflow : hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $number;
+  -webkit-box-orient: vertical;
+}
+
+@mixin center {  
+	position: absolute;
+	top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
