@@ -31,7 +31,7 @@
 				<div class="right-shop-detail">
 					<p class="shop-name">香辣馆</p>
 					<div class="star-line">
-						<div class="star"></div>
+						<ratingStar :disabled="true" style="display:inline-block"></ratingStar>
 						<p class="kilo-meters">12668.39km</p>
 					</div>
 					<p class="shop-address">

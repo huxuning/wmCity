@@ -15,6 +15,7 @@
 			startHover (i) {
 				if (this.disabled) return;
 				this.targetIndex = i
+				this.$emit('change', i+1)
 			},
 		},
 		mounted(){
