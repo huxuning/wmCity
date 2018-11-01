@@ -7,20 +7,13 @@
                 home
             </div>
         </div>
-        <slider>
+        <slider class="eat-home-slide">
                 <li>1</li>
                 <li>2</li>
                 <li>3</li>
                 <li>4</li>
                 <li>5</li>
         </slider>
-        <div class="store-item">
-            <img src="" alt="">
-            <div class="content">
-                <p>Nagano</p>
-                <ratingStar rating="4"></ratingStar>
-            </div>
-        </div>
     </div>    
 </template>
 
@@ -57,6 +50,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    .eat-home-slide{
+        width: 100%;
+        overflow: hidden;
+    }
     .hoho{
         background: #ccc;
         .bibi{
