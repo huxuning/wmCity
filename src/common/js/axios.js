@@ -6,14 +6,9 @@ import router from '../../router'
 import cookie from 'common/js/cookie'
 // 请求成功，返回的状态码不是200时调用
 const statusError = (data) => {
-  if (data.data && data.data.urlTitle) {
-    return
-  }
-  if (data.data && data.data.message) {
-    return
-  }
+  
   Toast.fail({
-    message: data.msg
+    message: data.resultDesc
   })
 }
 
@@ -54,10 +49,10 @@ axios.interceptors.request.use((config) => {
 })
 
 axios.interceptors.response.use((rs) => {
-  if (rs.data.code) {
-    if (rs.data.code !== 200 && rs.data.code !== '200') {
+  if (rs.resultCode) {
+    if (rs.resultCode !== 999999 && rs.resultCode !== '999999') {
       // 重定向登录
-      if (rs.data.code === 500) {
+      if (rs.resultCode === 500) {
         cookie.del('auth_code')
         // document.cookie = 'auth_code=' + ' '
         router.push({
@@ -68,7 +63,7 @@ axios.interceptors.response.use((rs) => {
       if (axios.isValidateRequest !== true) {
         statusError(rs.data)
       }
-      return Promise.reject(rs.data)
+      return Promise.reject(rs.resultData)
     }
   } else {
     console.log('数据格式返回有误')
