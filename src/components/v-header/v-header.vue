@@ -57,13 +57,13 @@
     display: flex;
     font-size: 16px;
     text-align: center;
-    background-color: $color-background-base;
+    background-color: $color-primary;
     box-sizing: border-box;
     z-index: 10;
     .left {
       height: .58rem;
       flex: 0 0 .4rem;
-      color: $color-text-9;
+      color: #fff;
       cursor: pointer;
       [class^="icon-"], [class*=" icon-"] {
         position: relative;
@@ -79,14 +79,14 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      color: $color-text-3;
+      color: #fff;
       font-size: $font-size-large-ls;
       text-align: center;
     }
     .right {
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
       height: .58rem;
-      flex: 0 0 .6rem;
+      flex: 0 0 .4rem;
       color: $color-text-9;
       display: flex;
       flex-direction: column;

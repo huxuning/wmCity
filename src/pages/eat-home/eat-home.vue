@@ -1,16 +1,17 @@
 <template>
 	<div>
 		<router-view></router-view>
-		<v-header title="好吃首页"></v-header>
-		<div class="hoho">
+		<v-header showLeft  title="好吃首页"></v-header>
+		<div style="height:1rem;">
+			<slider class="eat-home-slide">
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+				<li>5</li>
+			</slider>
 		</div>
-		<!-- <slider class="eat-home-slide">
-			<li>1</li>
-			<li>2</li>
-			<li>3</li>
-			<li>4</li>
-			<li>5</li>
-		</slider> -->
+		
 
 		<div class="mark-list">
 			<ul :style="{maxHeight: (isTakeUp ? '0.6rem' : '100%'), maxWidth: (isTakeUp ? 'calc(100% - 1.6rem)' : '100%')}">
@@ -48,6 +49,7 @@
 import VHeader from 'components/v-header/v-header'
 import RatingStar from 'components/ratingStar/ratingStar'
 import Slider from 'components/slider/slider'
+import {baseCategoryList} from 'api/goods.js'
 
 export default {
 	data () {
@@ -95,12 +97,12 @@ export default {
 			}
     },
     mounted () {
-        console.log('首页')
+      this.getBaseCategoryList()
     },
     components: {
-        VHeader,
-        Slider,
-        RatingStar
+			VHeader,
+			Slider,
+			RatingStar
     },
     computed: {
 	
@@ -112,6 +114,11 @@ export default {
 				} else {
 					this.activeIndex = currentIndex
 				}
+			},
+			getBaseCategoryList () {
+				baseCategoryList().then(rs => {
+					console.log(rs)
+				})
 			}
     },
     watch: {
@@ -125,6 +132,8 @@ export default {
 	.eat-home-slide {
 		width: 100%;
 		overflow: hidden;
+		margin-top:.86rem;
+		height:1rem;
 	}
 	.mark-list{
 		color: #595959;
