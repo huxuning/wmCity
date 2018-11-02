@@ -5,6 +5,7 @@ import App from './App'
 import VueLazyload from 'vue-lazyload'
 import fastclick from 'fastclick'
 import router from './router'
+import 'common/style/index.scss'
 
 Vue.config.productionTip = false
 require('common/js/rem.js')

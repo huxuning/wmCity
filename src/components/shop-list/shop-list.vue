@@ -1,5 +1,4 @@
 <template>
-	<scroll class="shop-list-wrap" v-if="shopListData" :data="shopListData">
 		<div class="shop-list">
 			<div class="shop-item" v-for="(item, index) in shopListData" :key="index">
 				<div class="left-shop-img" :style="{ background: 'url(' + item.shopImg + ') no-repeat', backgroundSize: 'cover'}">
@@ -17,7 +16,6 @@
 				</div>
 			</div>
 		</div>
-	</scroll>
   
 </template>
 
@@ -47,13 +45,7 @@
 <style lang="scss" scoped rel="stylesheet/scss">
 	@import '~common/style/variable.scss';
 	@import '~common/style/mixin.scss';
-	.shop-list-wrap{
-		position: absolute;
-    top: 0;
-    bottom: .8rem;
-    left: 0;
-    right: 0;
-	}
+	
   .shop-list{
 		background: #fafafa;
 		.shop-item{

@@ -144,9 +144,6 @@
       },
       _onScrollEnd () {
         let pageIndex = this.slider.getCurrentPage().pageX
-        if (this.loop) {
-          pageIndex -= 1
-        }
         this.currentPageIndex = pageIndex
         if (this.autoPlay) {
           this._play()
@@ -156,11 +153,12 @@
         this.dots = new Array(this.children.length)
       },
       _play () {
-        let pageIndex = this.slider.getCurrentPage().pageX + 1
-        clearTimeout(this.timer)
-        this.timer = setTimeout(() => {
-          this.slider.goToPage(pageIndex, 0, 400)
-        }, this.interval)
+        let pageIndex = this.currentPageIndex + 1
+        
+          this.timer = setTimeout(() => {
+            this.slider.next(400)
+          }, this.interval)
+        
       }
     }
   }

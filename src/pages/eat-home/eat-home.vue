@@ -1,24 +1,20 @@
 <template>
-	<div>
+	<div  @touchmove.prevent style="height:100%">
 		<router-view></router-view>
 		<v-header showLeft  title="好吃首页"></v-header>
-		<div style="height:1rem;">
-			<slider class="eat-home-slide">
-				<li>1</li>
-				<li>2</li>
-				<li>3</li>
-				<li>4</li>
-				<li>5</li>
-			</slider>
-		</div>
-		
-		<!-- 标签列表 -->
-		<mark-list :markListData="markListData" :isTakeUp="true"></mark-list>
-		
-		<!-- 商家列表 -->
-		<div class="list-wrap">
-			<shop-list :shopListData="shopListData"></shop-list>
-		</div>
+		<scroll :data="shopListData" class="shop-list-wrap"  :pullup="true">
+
+			<div>
+				<!-- 标签列表 -->
+				<mark-list :markListData="markListData" :isTakeUp="true"></mark-list>
+				
+				<!-- 商家列表 -->
+				<div class="list-wrap">
+					<shop-list :shopListData="shopListData"></shop-list>
+				</div>
+			</div>
+			
+		</scroll>
 			
 		
 	</div>
@@ -29,6 +25,7 @@ import VHeader from 'components/v-header/v-header'
 import RatingStar from 'components/ratingStar/ratingStar'
 import Slider from 'components/slider/slider'
 import MarkList from 'components/mark-list/mark-list'
+import Scroll from 'components/scroll/scroll'
 import ShopList from 'components/shop-list/shop-list'
 import {baseCategoryList} from 'api/goods.js'
 
@@ -108,6 +105,62 @@ export default {
 					kiloMeters: '12668.39km',
 					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
 					shopMark: '川湘菜系，烧烤'
+				},
+				{
+					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
+					shopName: '香辣馆',
+					kiloMeters: '12668.39km',
+					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
+					shopMark: '川湘菜系，烧烤'
+				},
+				{
+					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
+					shopName: '香辣馆',
+					kiloMeters: '12668.39km',
+					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
+					shopMark: '川湘菜系，烧烤'
+				},
+				{
+					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
+					shopName: '香辣馆',
+					kiloMeters: '12668.39km',
+					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
+					shopMark: '川湘菜系，烧烤'
+				},
+				{
+					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
+					shopName: '香辣馆',
+					kiloMeters: '12668.39km',
+					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
+					shopMark: '川湘菜系，烧烤'
+				},
+				{
+					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
+					shopName: '香辣馆',
+					kiloMeters: '12668.39km',
+					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
+					shopMark: '川湘菜系，烧烤'
+				},
+				{
+					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
+					shopName: '香辣馆',
+					kiloMeters: '12668.39km',
+					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
+					shopMark: '川湘菜系，烧烤'
+				},
+				{
+					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
+					shopName: '香辣馆',
+					kiloMeters: '12668.39km',
+					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
+					shopMark: '川湘菜系，烧烤'
+				},
+				{
+					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
+					shopName: '香辣馆',
+					kiloMeters: '12668.39km',
+					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
+					shopMark: '川湘菜系，烧烤'
 				}
 			]
 		}
@@ -120,7 +173,8 @@ export default {
 		Slider,
 		RatingStar,
 		MarkList,
-		ShopList
+		ShopList,
+		Scroll
 	},
 	computed: {
 
@@ -143,8 +197,15 @@ export default {
 	.eat-home-slide {
 		width: 100%;
 		overflow: hidden;
-		margin-top:.86rem;
 		height:1rem;
+	}
+	.shop-list-wrap{
+		position: absolute;
+    top: 0.86rem;
+    bottom: 0;
+    left: 0;
+    right: 0;
+		z-index:9;
 	}
 	.list-wrap{
 		position: relative;

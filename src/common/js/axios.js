@@ -14,6 +14,7 @@ const statusError = (data) => {
 
 // 网络出错时调用
 const requestError = (err) => {
+  console.log(err)
   let errorText = ''
   if (err.response && err.response.status) {
     errorText = '请求错误：' + err.response.status + ',' + err.response.statusText
@@ -49,6 +50,7 @@ axios.interceptors.request.use((config) => {
 })
 
 axios.interceptors.response.use((rs) => {
+  console.log(rs)
   if (rs.resultCode) {
     if (rs.resultCode !== 999999 && rs.resultCode !== '999999') {
       // 重定向登录

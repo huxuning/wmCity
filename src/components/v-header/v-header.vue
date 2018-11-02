@@ -2,7 +2,7 @@
   <div class="v-header border-retina">
     <div class="left" v-if="showLeft" @click="clickBack">
       <slot name="left">
-        <i v-if="goback" class="icon-arrow-left"></i>
+        <i v-if="goback" class="icon-xiangzuo"></i>
       </slot>
     </div>
     <div class="center">
@@ -66,10 +66,10 @@
       color: #fff;
       cursor: pointer;
       [class^="icon-"], [class*=" icon-"] {
-        position: relative;
-        top: 3px;
-        left: -3px;
-        font-size: $font-size-large-lx;
+        position: absolute;
+        font-size: 20px;
+        top: 50%;
+        margin-top: -10px;
       }
     }
     .center {
