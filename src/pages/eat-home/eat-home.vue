@@ -5,6 +5,16 @@
 		<scroll :data="shopListData" class="shop-list-wrap"  :pullup="true">
 
 			<div>
+				<!-- banner -->
+				<slider></slider>
+				<!-- 首页分类 -->
+				<div class="base-category-list">
+					<div class="category-item" v-for="(item, index) in baseCategory" :key="item.id">
+						<img :src="item.image"/>
+						<p>{{item.name}}</p>
+					</div>
+				</div>
+
 				<!-- 标签列表 -->
 				<mark-list :markListData="markListData" :isTakeUp="true"></mark-list>
 				
@@ -27,11 +37,12 @@ import Slider from 'components/slider/slider'
 import MarkList from 'components/mark-list/mark-list'
 import Scroll from 'components/scroll/scroll'
 import ShopList from 'components/shop-list/shop-list'
-import {baseCategoryList} from 'api/goods.js'
+import {baseCategoryList, baseRestaurantList, restaurantList, restaurantInfo} from 'api/eat.js'
 
 export default {
 	data () {
 		return {
+			baseCategory: [],
 			markListData: [
 				{
 					id: 1,
@@ -167,6 +178,9 @@ export default {
 	},
 	mounted () {
 		this.getBaseCategoryList()
+		this.getBaseRestaurantList()
+		this.getRestaurantList()
+		this.getRestaurantInfo()
 	},
 	components: {
 		VHeader,
@@ -182,10 +196,25 @@ export default {
 	methods: {
 		getBaseCategoryList () {
 			baseCategoryList().then(rs => {
+				this.baseCategory = rs.resultData				
+			})
+		},
+		getBaseRestaurantList () {
+			baseRestaurantList().then(rs => {
+				this.shopListData = rs.resultData
+			})
+		},
+		getRestaurantList () {
+			restaurantList().then(rs => {
+				this.shopListData = rs.resultData
+			})
+		},
+		getRestaurantInfo () {
+			restaurantInfo().then(rs => {
 				console.log(rs)
 			})
 		}
-	},
+	}, 
 	watch: {
 
 	}
@@ -193,7 +222,7 @@ export default {
 
 </script>
 
-<style lang="scss" scoped>
+<style  rel="stylesheet/scss" lang="scss" scoped>
 	.eat-home-slide {
 		width: 100%;
 		overflow: hidden;
@@ -209,5 +238,17 @@ export default {
 	}
 	.list-wrap{
 		position: relative;
+	}
+	.base-category-list{
+		width:100%;
+		margin-bottom:.2rem;
+		.category-item{
+			width: 25%;
+			display: inline-block;
+			text-align: center;
+			img {
+				max-width: 70%;
+			}
+		}
 	}
 </style>

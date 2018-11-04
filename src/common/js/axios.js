@@ -29,7 +29,7 @@ const requestError = (err) => {
 
 axios.defaults.timeout = 30 * 1000
 axios.defaults.withCredentials = true
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
+axios.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8'
 axios.defaults.baseURL = ''
 
 axios.interceptors.request.use((config) => {
@@ -51,21 +51,21 @@ axios.interceptors.request.use((config) => {
 
 axios.interceptors.response.use((rs) => {
   console.log(rs)
-  if (rs.resultCode) {
-    if (rs.resultCode !== 999999 && rs.resultCode !== '999999') {
+  if (rs.data.resultCode) {
+    if (rs.data.resultCode !== 999999 && rs.data.resultCode !== '999999') {
       // 重定向登录
-      if (rs.resultCode === 500) {
-        cookie.del('auth_code')
-        // document.cookie = 'auth_code=' + ' '
-        router.push({
-          path: '/login'
-        })
-        return
-      }
+      // if (rs.data.resultCode === 500) {
+      //   cookie.del('auth_code')
+      //   // document.cookie = 'auth_code=' + ' '
+      //   router.push({
+      //     path: '/login'
+      //   })
+      //   return
+      // }
       if (axios.isValidateRequest !== true) {
         statusError(rs.data)
       }
-      return Promise.reject(rs.resultData)
+      return Promise.reject(rs.data.resultData)
     }
   } else {
     console.log('数据格式返回有误')
@@ -92,7 +92,7 @@ export default function (options) {
   if (options.method === 'post') {
     config.data = options.data
   }
-
+  console.log (config)
   return new Promise((resolve, reject) => {
     axios(config).then((rs) => {
       resolve(rs.data)
