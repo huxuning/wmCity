@@ -3,8 +3,11 @@
 		<ul :style="{maxHeight: (isTakeUp ? '0.59rem' : '100%'), maxWidth: (isTakeUp ? 'calc(100% - 1.6rem)' : '100%')}">
 			<li v-for="(item, index) in markListData" :key="index" :class="{'active-mark' : activeIndex === index}" @click="markListClickHandle(index)">{{item.name}}</li>
 		</ul>
-		<p class="more-list-btn" @click="isTakeUp = !isTakeUp" v-show="isTakeUp">
+		<p class="more-list-btn" @click="isTakeUp = !isTakeUp" v-show="isTakeUp && !indexUse">
 			更多标签↓
+		</p>
+		<p class="more-list-btn" @click="clickHandle" v-show="isTakeUp && indexUse">
+			更多标签<i class="icon-jiahao"></i>
 		</p>
 		<p class="take-up-btn" @click="isTakeUp = !isTakeUp" v-show="!isTakeUp">
 			收起标签↑
@@ -21,6 +24,10 @@
 			isTakeUp: {
 				type: Boolean,
 				default: true
+			},
+			indexUse: {
+				type: Boolean,
+				default: false
 			}
 		},
 		data () {
@@ -35,6 +42,11 @@
 				} else {
 					this.activeIndex = currentIndex
 				}
+			},
+			clickHandle () {
+				this.$emit('clickMore', {
+					isTakeUp: true
+				})
 			}
 		}
   }
@@ -75,6 +87,9 @@
 			top: 0.25rem;
 			left: auto;
 			right: 0.3rem;
+		}
+		.icon-jiahao{
+			font-size: 14px;
 		}
 	}
 </style>

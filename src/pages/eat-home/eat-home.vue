@@ -9,14 +9,14 @@
 				<slider></slider>
 				<!-- 首页分类 -->
 				<div class="base-category-list">
-					<div class="category-item" v-for="(item, index) in baseCategory" :key="item.id">
+					<div class="category-item" v-for="item in baseCategory" :key="item.id">
 						<img :src="item.image"/>
 						<p>{{item.name}}</p>
 					</div>
 				</div>
 
 				<!-- 标签列表 -->
-				<mark-list :markListData="markListData" :isTakeUp="true"></mark-list>
+				<mark-list :markListData="markListData" :isTakeUp="true" :indexUse="true" @clickMore="clickMore()"></mark-list>
 				
 				<!-- 商家列表 -->
 				<div class="list-wrap">
