@@ -11,7 +11,18 @@ export function baseCategoryList (params = {}) {
     data: data
   })
 }
-
+// 获取首页餐饮子分类
+export function querySubCategoryList (params = {}) {
+  let data = {
+    parentId: '',
+    ...params
+  }
+  return axios({
+    url: '/catering/category/querySubCategoryList/' + params.parentId,
+    method: 'get',
+    data: data
+  })
+}
 //获取首页推荐商户列表
 export function baseRestaurantList (params = {}) {
   let data = {
