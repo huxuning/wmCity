@@ -14,7 +14,6 @@ const statusError = (data) => {
 
 // 网络出错时调用
 const requestError = (err) => {
-  console.log(err)
   let errorText = ''
   if (err.response && err.response.status) {
     errorText = '请求错误：' + err.response.status + ',' + err.response.statusText
@@ -29,7 +28,8 @@ const requestError = (err) => {
 
 axios.defaults.timeout = 30 * 1000
 axios.defaults.withCredentials = true
-axios.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8'
+axios.defaults.headers.post['Content-Type'] = 'Content-Type:application/x-www-form-urlencoded; charset=UTF-8'
+// axios.defaults.headers.post['Data-Type'] = 'json'
 axios.defaults.baseURL = ''
 
 axios.interceptors.request.use((config) => {
@@ -50,7 +50,6 @@ axios.interceptors.request.use((config) => {
 })
 
 axios.interceptors.response.use((rs) => {
-  console.log(rs)
   if (rs.data.resultCode) {
     if (rs.data.resultCode !== 999999 && rs.data.resultCode !== '999999') {
       // 重定向登录
@@ -90,6 +89,12 @@ export default function (options) {
     config.params = options.data
   }
   if (options.method === 'post') {
+    // config.data = JSON.stringify(options.data)
+    config.transformRequest= [function(data) {
+      console.log(data)
+      data = JSON.stringify(data)
+      return data
+    }]
     config.data = options.data
   }
   console.log (config)
@@ -103,3 +108,11 @@ export default function (options) {
     })
   })
 }
+
+axios(
+  {
+    url: "/catering/restaurant/queryRecommendRestaurantList/1", 
+    method: "post", 
+    data: {}
+  }
+)

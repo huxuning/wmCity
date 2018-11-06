@@ -37,7 +37,7 @@ import Slider from 'components/slider/slider'
 import MarkList from 'components/mark-list/mark-list'
 import Scroll from 'components/scroll/scroll'
 import ShopList from 'components/shop-list/shop-list'
-import {baseCategoryList, baseRestaurantList, restaurantList, restaurantInfo} from 'api/eat.js'
+import {baseCategoryList, baseRestaurantList, restaurantList} from 'api/eat.js'
 
 export default {
 	data () {
@@ -180,7 +180,6 @@ export default {
 		this.getBaseCategoryList()
 		this.getBaseRestaurantList()
 		this.getRestaurantList()
-		this.getRestaurantInfo()
 	},
 	components: {
 		VHeader,
@@ -207,11 +206,6 @@ export default {
 		getRestaurantList () {
 			restaurantList().then(rs => {
 				this.shopListData = rs.resultData
-			})
-		},
-		getRestaurantInfo () {
-			restaurantInfo().then(rs => {
-				console.log(rs)
 			})
 		}
 	}, 
