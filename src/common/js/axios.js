@@ -28,7 +28,7 @@ const requestError = (err) => {
 
 axios.defaults.timeout = 30 * 1000
 axios.defaults.withCredentials = true
-axios.defaults.headers.post['Content-Type'] = 'Content-Type:application/x-www-form-urlencoded; charset=UTF-8'
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
 // axios.defaults.headers.post['Data-Type'] = 'json'
 axios.defaults.baseURL = ''
 
@@ -41,9 +41,9 @@ axios.interceptors.request.use((config) => {
   //   config.data.token = localStore.get('token', '')
   // }
 
-  if (config.method === 'post') {
-    config.data = qs.stringify(config.data)
-  }
+  // if (config.method === 'post') {
+  //   config.data = qs.stringify(config.data)
+  // }
   return config
 }, (err) => {
   return Promise.reject(err)
@@ -90,11 +90,11 @@ export default function (options) {
   }
   if (options.method === 'post') {
     // config.data = JSON.stringify(options.data)
-    config.transformRequest= [function(data) {
-      console.log(data)
-      data = JSON.stringify(data)
-      return data
-    }]
+    // config.transformRequest= [function(data) {
+    //   console.log(data)
+    //   data = JSON.stringify(data)
+    //   return data
+    // }]
     config.data = options.data
   }
   console.log (config)
