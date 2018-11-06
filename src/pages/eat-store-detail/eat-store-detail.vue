@@ -131,7 +131,7 @@ export default {
 					overflow: hidden;
 					.kilo-meters{
 						float: right;
-						color: #f8b72a;
+						color: $color-primary;
 					}
 				}
 				.shop-address{
