@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import {restaurantInfo} from 'api/eat.js'
+import {restaurantInfo, goodsList} from 'api/eat.js'
 import VHeader from 'components/v-header/v-header'
 import Scroll from 'components/scroll/scroll'
 export default {
@@ -45,11 +45,13 @@ export default {
 		return {
 			shopInfo: null,
 			showNotice: false,
-			shopTab: 1
+			shopTab: 1,
+			goodsList:[]
 		}
 	},
 	mounted(){
 		this.getRestaurantInfo()
+		this.getGoodsList()
 		console.log('详情页！')
 	},
 	components: {
@@ -63,11 +65,16 @@ export default {
 	methods: {
 		getRestaurantInfo () {
 			let id = this.$route.query.shopId
-			console.log(this.$route)
 			restaurantInfo({id: id}).then(rs => {
 				this.shopInfo = rs.resultData
 				console.log(rs.resultData.notice)
 				this.shopInfo.notice = rs.resultData.notice.replace(/[\n]/g, '<br/>')
+			})
+		},
+		getGoodsList () {
+			let id = this.$route.query.shopId
+			goodsList({id: id}).then(rs => {
+				this.goodsList = rs.resultData
 			})
 		},
 		noticeShow() {
@@ -75,7 +82,7 @@ export default {
 		},
 		clickTab(index) {
 			this.shopTab = index;
-			
+
 		}
 	},
 	watch: {

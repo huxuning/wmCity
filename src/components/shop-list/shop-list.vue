@@ -1,6 +1,6 @@
 <template>
 		<div class="shop-list">
-			<div class="shop-item" v-for="(item, index) in shopListData" :key="index" @click="linkToDetail('34')">
+			<div class="shop-item" v-for="(item, index) in shopListData" :key="index" @click="linkToDetail('94')">
 				<div class="left-shop-img" :style="{ background: 'url(' + item.shopImg + ') no-repeat', backgroundSize: 'cover'}">
 				</div>
 				<div class="right-shop-detail">
