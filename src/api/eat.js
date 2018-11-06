@@ -40,14 +40,10 @@ export function restaurantList (params = {}) {
 }
 
 //获取商户信息
-export function restaurantInfo (params = {}) {
-  let data = {
-    ...params
-  }
-  console.log(data)
+export function restaurantInfo (params) {
+  console.log(params)
   return axios({
-    url: '/catering/restaurant/readCateringRestaurantInfo/34',
-    method: 'get',
-    data: data
+    url: '/catering/restaurant/readCateringRestaurantInfo/'+params.id,
+    method: 'get'
   })
 }

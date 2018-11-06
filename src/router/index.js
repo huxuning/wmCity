@@ -31,34 +31,31 @@ export default new Router({
       meta: {
         title: '好吃首页'
       },
-      children: [
-        {
-          path: '/EatStoreList',
-          name: 'EatStoreList',
-          component: EatStoreList,
-          meta: {
-            title: '商铺列表'
-          }
-        },
-        {
-          path: '/EatStoreDetail',
-          name: 'EatStoreDetail',
-          component: EatStoreDetail,
-          meta: {
-            needLogin: true,
-            title: '店铺首页'
-          }
-        },
-        {
-          path: '/EatOrderComfirm',
-          name: 'EatOrderComfirm',
-          component: EatOrderComfirm,
-          meta: {
-            needLogin: true,
-            title: '订单支付'
-          }
-        }
-      ]
+    },
+    {
+      path: '/EatStoreList',
+      name: 'EatStoreList',
+      component: EatStoreList,
+      meta: {
+        title: '商铺列表'
+      }
+    },
+    {
+      path: '/EatStoreDetail',
+      name: 'EatStoreDetail',
+      component: EatStoreDetail,
+      meta: {
+        title: '店铺首页'
+      }
+    },
+    {
+      path: '/EatOrderComfirm',
+      name: 'EatOrderComfirm',
+      component: EatOrderComfirm,
+      meta: {
+        needLogin: true,
+        title: '订单支付'
+      }
     },
     {
       path: '/login',
@@ -68,17 +65,15 @@ export default new Router({
         hasNav: false,
         title: '登录'
       },
-      children: [
-        {
-          path: '/register',
-          name: 'register',
-          component: Register,
-          meta: {
-            hasNav: false,
-            title: '注册'
-          }
-        }
-      ]
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register,
+      meta: {
+        hasNav: false,
+        title: '注册'
+      }
     }
   ]
 })

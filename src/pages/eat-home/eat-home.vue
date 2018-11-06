@@ -1,6 +1,6 @@
 <template>
 	<div  @touchmove.prevent style="height:100%">
-		<router-view></router-view>
+		
 		<v-header showLeft  title="好吃首页"></v-header>
 		<scroll :data="shopListData" class="shop-list-wrap"  :pullup="true">
 

@@ -1,6 +1,6 @@
 <template>
   <div class="mark-list">
-		<ul :style="{maxHeight: (isTakeUp ? '0.6rem' : '100%'), maxWidth: (isTakeUp ? 'calc(100% - 1.6rem)' : '100%')}">
+		<ul :style="{maxHeight: (isTakeUp ? '0.59rem' : '100%'), maxWidth: (isTakeUp ? 'calc(100% - 1.6rem)' : '100%')}">
 			<li v-for="(item, index) in markListData" :key="index" :class="{'active-mark' : activeIndex === index}" @click="markListClickHandle(index)">{{item.name}}</li>
 		</ul>
 		<p class="more-list-btn" @click="isTakeUp = !isTakeUp" v-show="isTakeUp">
