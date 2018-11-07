@@ -1,6 +1,6 @@
 <template>
 	<div  @touchmove.prevent style="height:100%">
-		<v-header showLeft  title="店铺详情"></v-header>
+		<v-header showLeft  title="店铺详情" @clickBack="goback"></v-header>
 		<scroll v-if="shopInfo" :data="shopInfo" class="shop-info-wrap"  :pullup="true">
 			<div>
 				<div class="shop-item">
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import {restaurantInfo, goodsList} from 'api/eat.js'
+import {restaurantInfo, goodsCategoryList} from 'api/eat.js'
 import VHeader from 'components/v-header/v-header'
 import Scroll from 'components/scroll/scroll'
 export default {
@@ -51,7 +51,7 @@ export default {
 	},
 	mounted(){
 		this.getRestaurantInfo()
-		this.getGoodsList()
+		this.getGoodsCategoryList()
 		console.log('详情页！')
 	},
 	components: {
@@ -77,12 +77,21 @@ export default {
 				this.goodsList = rs.resultData
 			})
 		},
+		getGoodsCategoryList () {
+			let id = this.$route.query.shopId
+			goodsCategoryList({id: id}).then(rs => {
+				this.goodsCategoryList = rs.resultData
+			})
+		},
 		noticeShow() {
 			this.showNotice = !this.showNotice
 		},
 		clickTab(index) {
 			this.shopTab = index;
 
+		},
+		goback() {
+			this.$router.go(-1)
 		}
 	},
 	watch: {

@@ -1,15 +1,15 @@
 <template>
   <div class="mark-list">
-		<ul :style="{maxHeight: (isTakeUp ? '0.59rem' : '100%'), maxWidth: (isTakeUp ? 'calc(100% - 1.6rem)' : '100%')}">
-			<li v-for="(item, index) in markListData" :key="index" :class="{'active-mark' : activeIndex === index}" @click="markListClickHandle(index)">{{item.name}}</li>
+		<ul :style="{maxHeight: (isShow ? '0.59rem' : '100%'), maxWidth: (isShow ? 'calc(100% - 1.6rem)' : '100%')}">
+			<li v-for="(item, index) in markListData" :key="index" :class="{'active-mark' : currentTypeId === item.id}" @click="markListClickHandle(item.id)">{{item.name}}</li>
 		</ul>
-		<p class="more-list-btn" @click="isTakeUp = !isTakeUp" v-show="isTakeUp && !indexUse">
+		<p class="more-list-btn" @click="isShow = !isShow" v-show="isShow && !indexUse">
 			更多标签↓
 		</p>
-		<p class="more-list-btn" @click="clickHandle" v-show="isTakeUp && indexUse">
+		<p class="more-list-btn" @click="clickHandle" v-show="isShow && indexUse">
 			更多标签<i class="icon-jiahao"></i>
 		</p>
-		<p class="take-up-btn" @click="isTakeUp = !isTakeUp" v-show="!isTakeUp">
+		<p class="take-up-btn" @click="isShow = !isShow" v-show="!isShow">
 			收起标签↑
 		</p>
 	</div>
@@ -28,25 +28,34 @@
 			indexUse: {
 				type: Boolean,
 				default: false
+			},
+			currentTypeId: {
+				type: Number
 			}
 		},
 		data () {
 			return {
-				activeIndex: -1 // active状态的标签的下标，默认没有任何标签初始为active状态
+				isShow: this.isTakeUp
 			}
 		},
 		methods: {
-			markListClickHandle (currentIndex) {
-				if (this.activeIndex === currentIndex) {
-					this.activeIndex = -1
-				} else {
-					this.activeIndex = currentIndex
+			markListClickHandle (id) {
+				if (this.indexUse) {
+					this.$emit('clickMore', id)
+				}else {
+					this.$emit('clickCategory', id)
 				}
 			},
 			clickHandle () {
-				this.$emit('clickMore', {
-					isTakeUp: true
-				})
+				this.$emit('clickMore', null)
+			}
+		},
+		watch: {
+			isTakeUp: function (val) {
+				this.isShow = val
+			},
+			currentTypeId: function (val) {
+				console.log(val)
 			}
 		}
   }

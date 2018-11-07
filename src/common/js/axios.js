@@ -97,7 +97,6 @@ export default function (options) {
     // }]
     config.data = options.data
   }
-  console.log (config)
   return new Promise((resolve, reject) => {
     axios(config).then((rs) => {
       resolve(rs.data)

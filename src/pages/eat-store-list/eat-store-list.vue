@@ -1,16 +1,16 @@
 <template>
 	<div @touchmove.prevent style="height:100%">
-		<v-header showLeft title="商铺列表"></v-header>
+		<v-header showLeft title="商铺列表" @clickBack="goback"></v-header>
 		<scroll v-if="shopListData" :data="shopListData" class="shop-list-wrap"  :pullup="true">
 			<div>
 				<!-- 商铺类型 -->
 				<div class="base-category">
 					<ul>
-						<li v-for="(item, index) in baseCategory" :key="index" :class="{'active-type': activeTypeIdx === index}" @click="activeTypeIdx = index">{{item.name}}</li>
+						<li v-for="(item, index) in baseCategory" :key="index" :class="{'active-type': baseCategoryId === item.id}" @click="clickBaseCategotry(item.id)">{{item.name}}</li>
 					</ul>
 				</div>
 				<!-- 标签列表 -->
-				<mark-list :markListData="markListData" :isTakeUp="true"></mark-list>
+				<mark-list :markListData="markListData" :isTakeUp="isTakeUp" :currentTypeId="currentTypeId" @clickCategory="clickCategory"></mark-list>
 				<!-- 商家列表 -->
 				<div class="list-wrap">
 					<shop-list :shopListData="shopListData"></shop-list>
@@ -25,10 +25,12 @@ import VHeader from 'components/v-header/v-header'
 import Scroll from 'components/scroll/scroll'
 import MarkList from 'components/mark-list/mark-list'
 import ShopList from 'components/shop-list/shop-list'
-import {baseCategoryList, querySubCategoryList} from 'api/eat.js'
+import {baseCategoryList, querySubCategoryList, restaurantList} from 'api/eat.js'
 export default {
 	data () {
 		return {
+			isTakeUp: true,
+			baseCategoryId: 1,
 			markListData: [
 				{
 					id: 1,
@@ -162,11 +164,15 @@ export default {
 			],
 			baseCategory: [],
 			activeTypeIdx: 0,
-			currentTypeId: ''
+			currentTypeId: null
 		}
 	},
 	mounted () {
+		this.currentTypeId = this.$route.query.categoryId ? Number(this.$route.query.categoryId) : null
+		this.isTakeUp = !(this.$route.query.categoryId == null)
+		this.baseCategoryId = this.$route.query.baseCategoryId || 1
 		this.getBaseCategoryList()
+		this.getQuerySubCategoryList()
 	},
 	components: {
 		VHeader,
@@ -184,8 +190,35 @@ export default {
 			})
 		},
 		getQuerySubCategoryList () {
-			querySubCategoryList().then(rs = {
+			let data = {
+				parentId: this.baseCategoryId
+			}
+			querySubCategoryList(data).then(rs => {
+				this.markListData = rs.resultData
 			})
+		},
+		getRestaurantList (id, page) {
+			let data = {
+				categoryId: id,
+				pageNum: page
+			}
+			restaurantList(data).then(rs=>{
+				this.shopListData = rs.resultData
+			})
+		},
+		clickBaseCategotry(id) {
+			this.baseCategoryId = id
+			this.currentTypeId = null //置空二级分类
+			this.getQuerySubCategoryList()
+			this.getRestaurantList()
+		},
+		clickCategory (id) {
+			console.log(id)
+			this.currentTypeId = id
+			this.getRestaurantList()
+		},
+		goback () {
+			this.$router.go(-1)
 		}
 	},
 	watch: {

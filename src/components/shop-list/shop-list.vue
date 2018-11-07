@@ -1,19 +1,20 @@
 <template>
 		<div class="shop-list">
-			<div class="shop-item" v-for="(item, index) in shopListData" :key="index" @click="linkToDetail('94')">
-				<div class="left-shop-img" :style="{ background: 'url(' + item.shopImg + ') no-repeat', backgroundSize: 'cover'}">
+			<div class="shop-item" v-for="(item, index) in shopListData" :key="index" @click="linkToDetail(item.id)">
+				<div class="left-shop-img">
+					<img v-lazy="item.coverPicture" alt="">
 				</div>
 				<div class="right-shop-detail">
-					<p class="shop-name">{{item.shopName}}</p>
+					<p class="shop-name">{{item.name}}</p>
 					<div class="star-line">
 						<ratingStar :disabled="true" style="display:inline-block"></ratingStar>
-						<p class="kilo-meters">{{item.kiloMeters}}</p>
+						<p class="kilo-meters">{{item.distance}}</p>
 					</div>
 					<p class="shop-address">
 						<i class="icon-dizhi"></i>
 						{{item.address}}
 					</p>
-					<p class="shop-mark">{{item.shopMark}}</p>
+					<p class="shop-mark">{{item.labelName}}</p>
 				</div>
 			</div>
 		</div>
@@ -40,7 +41,6 @@
 		},
 		methods: {
 			linkToDetail (shopId) {
-				console.log(shopId, '1111')
 				this.$router.push({
 					path: '/EatStoreDetail',
 					query: {
@@ -70,6 +70,10 @@
 				width: 1.38rem;
 				height: 1.38rem;
 				border-radius: 5px;
+				img{
+					width:100%;
+					height:100%;
+				}
 			}
 			.right-shop-detail{
 				width: calc(100% - 1.38rem - 0.18rem);

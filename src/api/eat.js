@@ -11,16 +11,22 @@ export function baseCategoryList (params = {}) {
     data: data
   })
 }
-// 获取首页餐饮子分类
+// 获取首页餐饮子分类  (弃)
 export function querySubCategoryList (params = {}) {
-  let data = {
-    parentId: '',
+  let data ={
     ...params
   }
   return axios({
-    url: '/catering/category/querySubCategoryList/' + params.parentId,
+    url: '/catering/category/querySubCategoryList/' + (params.parentId ? params.parentId : 0),
     method: 'get',
     data: data
+  })
+}
+//获取首页餐饮子分类
+export function labelList (params = {}) {
+  return axios({
+    url: '/catering/restaurant/labelList',
+    method: 'get'
   })
 }
 //获取首页推荐商户列表
@@ -29,10 +35,9 @@ export function baseRestaurantList (params = {}) {
     cityName: "巴黎", 
     longitude: null, 
     latitude: null, 
-    locationFlag: "Y",
+    locationFlag: "N",
     ...params
   }
-  console.log(data)
   return axios({
     url: '/catering/restaurant/queryRecommendRestaurantList/' + (params.pageNum ? params.pageNum : 1),
     method: 'post',
@@ -47,7 +52,7 @@ export function restaurantList (params = {}) {
   }
   console.log(data)
   return axios({
-    url: '/catering/restaurant/queryCateringRestaurantList/1',
+    url: '/catering/restaurant/queryCateringRestaurantList/'+(params.pageNum ? params.pageNum : 1),
     method: 'post',
     data: data
   })
@@ -62,10 +67,18 @@ export function restaurantInfo (params) {
   })
 }
 
-//获取商户信息
+//获取商品分类信息
+export function goodsCategoryList (params) {
+  return axios({
+    url: '  /catering/goodsCategory/queryGoodsCategoryList/'+params.id,
+    method: 'get'
+  })
+}
+
+//获取商品分类信息
 export function goodsList (params) {
   return axios({
-    url: '/catering/goodsCategory/queryGoodsCategoryList/'+params.id,
+    url: '/catering/goods/queryGoodsList/'+params.goodsCategoryId+'/'+params.status+'/'+param.pageNum,
     method: 'get'
   })
 }
