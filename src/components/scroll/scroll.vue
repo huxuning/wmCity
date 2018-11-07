@@ -47,6 +47,10 @@
         direction: {
           type: String,
           default: DIRECTION_V
+        },
+        stopPropagation: {
+          type: Boolean,
+          default: true
         }
       },
       mounted () {
@@ -63,6 +67,7 @@
             probeType: this.probeType,
             click: this.click,
             momentum: this.momentum,
+            stopPropagation: this.stopPropagation,
             eventPassthrough: this.direction === DIRECTION_V ? DIRECTION_H : DIRECTION_V
           })
           if (this.listenScroll) {
@@ -87,6 +92,7 @@
           }
         },
         disable () {
+          console.log('disabled')
           this.scroll && this.scroll.disable()
         },
         enable () {

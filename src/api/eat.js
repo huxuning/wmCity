@@ -32,7 +32,7 @@ export function labelList (params = {}) {
 //获取首页推荐商户列表
 export function baseRestaurantList (params = {}) {
   let data = {
-    cityName: "巴黎", 
+    cityName: "", 
     longitude: null, 
     latitude: null, 
     locationFlag: "N",
@@ -50,7 +50,6 @@ export function restaurantList (params = {}) {
   let data = {
     ...params
   }
-  console.log(data)
   return axios({
     url: '/catering/restaurant/queryCateringRestaurantList/'+(params.pageNum ? params.pageNum : 1),
     method: 'post',
@@ -78,7 +77,15 @@ export function goodsCategoryList (params) {
 //获取商品分类信息
 export function goodsList (params) {
   return axios({
-    url: '/catering/goods/queryGoodsList/'+params.goodsCategoryId+'/'+params.status+'/'+param.pageNum,
+    url: '/catering/goods/queryGoodsList/'+params.goodsCategoryId+'/'+params.status+'/'+params.pageNum,
+    method: 'get'
+  })
+}
+
+//店铺配送地址
+export function restaurantLocation (params) {
+  return axios({
+    url: '/catering/location/queryRestaurantLocationList/'+params.id,
     method: 'get'
   })
 }
