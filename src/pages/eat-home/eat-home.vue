@@ -9,7 +9,7 @@
 				<slider></slider>
 				<!-- 首页分类 -->
 				<div class="base-category-list">
-					<div class="category-item" v-for="item in baseCategory" :key="item.id" @click="clickBaseCategory(item.id)">
+					<div class="category-item" v-for="item in baseCategory" :key="item.id" @click="clickBaseCategory(item.code)">
 						<img v-lazy="item.image"/>
 						<p>{{item.name}}</p>
 					</div>
@@ -43,44 +43,7 @@ export default {
 	data () {
 		return {
 			baseCategory: [],
-			markListData: [
-				{
-					id: 1,
-					name: '川湘菜系1'
-				},
-				{
-					id: 2,
-					name: '烧烤1'
-				},
-				{
-					id: 3,
-					name: '粉面粥1'
-				},
-				{
-					id: 4,
-					name: '川湘菜系2'
-				},
-				{
-					id: 5,
-					name: '烧烤2'
-				},
-				{
-					id: 6,
-					name: '粉面粥2'
-				},
-				{
-					id: 7,
-					name: '川湘菜系3'
-				},
-				{
-					id: 8,
-					name: '烧烤3'
-				},
-				{
-					id: 9,
-					name: '粉面粥3'
-				}
-			],
+			markListData: [],
 			shopListData: [],
 			shopPage: 1
 		}
@@ -88,7 +51,13 @@ export default {
 	mounted () {
 		this.getBaseCategoryList()
 		this.getBaseRestaurantList()
-		this.getQuerySubCategoryList()
+
+		//为了不在其他页面搞一个1-4循环请求，把数据放到storage
+		if (sessionStorage.CategoryList) {
+			this.markListData = JSON.parse(sessionStorage.CategoryList)
+		} else {
+			this.getQuerySubCategoryList()
+		}
 	},
 	components: {
 		VHeader,
@@ -117,16 +86,34 @@ export default {
 				}
 			})
 		},
+		// 循环1-4一级分类请求二级分类。 迷之接口导致代码没眼看系列。
 		getQuerySubCategoryList () {
-			querySubCategoryList().then(rs=>{
-				console.log(rs)
+			var CategoryList = []
+			querySubCategoryList({id: 1}).then(rs=>{
+				var arr = rs.resultData.map(item=>{return {code: item.code, parentCode: item.parentCode, name: item.name}})
+				CategoryList.push(...arr)
+				querySubCategoryList({id: 2}).then(rs=>{
+					var arr = rs.resultData.map(item=>{return {code: item.code, parentCode: item.parentCode, name: item.name}})
+					CategoryList.push(...arr)
+					querySubCategoryList({id: 3}).then(rs=>{
+						var arr = rs.resultData.map(item=>{return {code: item.code, parentCode: item.parentCode, name: item.name}})
+						CategoryList.push(...arr)
+						querySubCategoryList({id: 4}).then(rs=>{
+							var arr = rs.resultData.map(item=>{return {code: item.code, parentCode: item.parentCode, name: item.name}})
+							CategoryList.push(...arr)
+							sessionStorage.CategoryList = JSON.stringify(CategoryList)
+							this.markListData =CategoryList;
+						})
+					})
+				})
 			})
 		},
-		clickMore (id) {
+		clickMore (item) {
 			this.$router.push({
 				path: '/EatStoreList',
 				query: {
-					category: id
+					categoryId: item ? item.code : null,
+					baseCategoryId: item ? item.parentCode : null
 				}
 			})
 		},

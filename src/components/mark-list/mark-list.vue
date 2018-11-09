@@ -1,7 +1,7 @@
 <template>
   <div class="mark-list">
 		<ul :style="{maxHeight: (isShow ? '0.59rem' : '100%'), maxWidth: (isShow ? 'calc(100% - 1.6rem)' : '100%')}">
-			<li v-for="(item, index) in markListData" :key="index" :class="{'active-mark' : currentTypeId === item.id}" @click="markListClickHandle(item.id)">{{item.name}}</li>
+			<li v-for="(item, index) in markListData" :key="index" :class="{'active-mark' : currentTypeId === item.code}" @click="markListClickHandle(item)">{{item.name}}</li>
 		</ul>
 		<p class="more-list-btn" @click="isShow = !isShow" v-show="isShow && !indexUse">
 			更多标签↓
@@ -30,7 +30,7 @@
 				default: false
 			},
 			currentTypeId: {
-				type: Number
+				type: String
 			}
 		},
 		data () {
@@ -39,11 +39,11 @@
 			}
 		},
 		methods: {
-			markListClickHandle (id) {
+			markListClickHandle (item) {
 				if (this.indexUse) {
-					this.$emit('clickMore', id)
+					this.$emit('clickMore', item)
 				}else {
-					this.$emit('clickCategory', id)
+					this.$emit('clickCategory', item)
 				}
 			},
 			clickHandle () {

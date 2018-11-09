@@ -17,7 +17,7 @@ export function querySubCategoryList (params = {}) {
     ...params
   }
   return axios({
-    url: '/catering/category/querySubCategoryList/' + (params.parentId ? params.parentId : 0),
+    url: '/catering/category/querySubCategoryList/' + (params.id ? params.id : 0),
     method: 'get',
     data: data
   })
@@ -47,6 +47,7 @@ export function baseRestaurantList (params = {}) {
 
 //获取商户列表
 export function restaurantList (params = {}) {
+  console.log(params)
   let data = {
     ...params
   }

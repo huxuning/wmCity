@@ -6,7 +6,7 @@
 				<!-- 商铺类型 -->
 				<div class="base-category">
 					<ul>
-						<li v-for="(item, index) in baseCategory" :key="index" :class="{'active-type': baseCategoryId === item.id}" @click="clickBaseCategotry(item.id)">{{item.name}}</li>
+						<li v-for="(item, index) in baseCategory" :key="index" :class="{'active-type': baseCategoryId === item.code}" @click="clickBaseCategotry(item.code)">{{item.name}}</li>
 					</ul>
 				</div>
 				<!-- 标签列表 -->
@@ -25,154 +25,34 @@ import VHeader from 'components/v-header/v-header'
 import Scroll from 'components/scroll/scroll'
 import MarkList from 'components/mark-list/mark-list'
 import ShopList from 'components/shop-list/shop-list'
-import {baseCategoryList, querySubCategoryList, restaurantList} from 'api/eat.js'
+import {baseCategoryList, querySubCategoryList, restaurantList, baseRestaurantList} from 'api/eat.js'
 export default {
 	data () {
 		return {
 			isTakeUp: true,
+			shopPage: 1,
 			baseCategoryId: 1,
-			markListData: [
-				{
-					id: 1,
-					name: '川湘菜系1'
-				},
-				{
-					id: 2,
-					name: '烧烤1'
-				},
-				{
-					id: 3,
-					name: '粉面粥1'
-				},
-				{
-					id: 4,
-					name: '川湘菜系2'
-				},
-				{
-					id: 5,
-					name: '烧烤2'
-				},
-				{
-					id: 6,
-					name: '粉面粥2'
-				},
-				{
-					id: 7,
-					name: '川湘菜系3'
-				},
-				{
-					id: 8,
-					name: '烧烤3'
-				},
-				{
-					id: 9,
-					name: '粉面粥3'
-				}
-			],
-			shopListData: [
-				{
-					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
-					shopName: '香辣馆',
-					kiloMeters: '12668.39km',
-					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
-					shopMark: '川湘菜系，烧烤'
-				},
-				{
-					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
-					shopName: '香辣馆',
-					kiloMeters: '12668.39km',
-					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
-					shopMark: '川湘菜系，烧烤'
-				},
-				{
-					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
-					shopName: '香辣馆',
-					kiloMeters: '12668.39km',
-					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
-					shopMark: '川湘菜系，烧烤'
-				},
-				{
-					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
-					shopName: '香辣馆',
-					kiloMeters: '12668.39km',
-					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
-					shopMark: '川湘菜系，烧烤'
-				},
-				{
-					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
-					shopName: '香辣馆',
-					kiloMeters: '12668.39km',
-					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
-					shopMark: '川湘菜系，烧烤'
-				},
-				{
-					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
-					shopName: '香辣馆',
-					kiloMeters: '12668.39km',
-					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
-					shopMark: '川湘菜系，烧烤'
-				},
-				{
-					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
-					shopName: '香辣馆',
-					kiloMeters: '12668.39km',
-					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
-					shopMark: '川湘菜系，烧烤'
-				},
-				{
-					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
-					shopName: '香辣馆',
-					kiloMeters: '12668.39km',
-					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
-					shopMark: '川湘菜系，烧烤'
-				},
-				{
-					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
-					shopName: '香辣馆',
-					kiloMeters: '12668.39km',
-					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
-					shopMark: '川湘菜系，烧烤'
-				},
-				{
-					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
-					shopName: '香辣馆',
-					kiloMeters: '12668.39km',
-					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
-					shopMark: '川湘菜系，烧烤'
-				},
-				{
-					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
-					shopName: '香辣馆',
-					kiloMeters: '12668.39km',
-					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
-					shopMark: '川湘菜系，烧烤'
-				},
-				{
-					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
-					shopName: '香辣馆',
-					kiloMeters: '12668.39km',
-					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
-					shopMark: '川湘菜系，烧烤'
-				},
-				{
-					shopImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1541091522971&di=969e224df11807f1bedf56036e5c77d9&imgtype=0&src=http%3A%2F%2Fuploads.5068.com%2Fallimg%2F1801%2F0U9561942-3.jpg',
-					shopName: '香辣馆',
-					kiloMeters: '12668.39km',
-					address: '40 rue alexandre dumas 75011 paris pre st Grevey',
-					shopMark: '川湘菜系，烧烤'
-				}
-			],
+			listType: 'base', // base 推荐列表,  normal  分类请求的列表
+			markListData: [],
+			shopListData: [],
 			baseCategory: [],
 			activeTypeIdx: 0,
 			currentTypeId: null
 		}
 	},
 	mounted () {
-		this.currentTypeId = this.$route.query.categoryId ? Number(this.$route.query.categoryId) : null
+		this.currentTypeId = this.$route.query.categoryId ? this.$route.query.categoryId : null
 		this.isTakeUp = !(this.$route.query.categoryId == null)
-		this.baseCategoryId = this.$route.query.baseCategoryId || 1
+		this.baseCategoryId = this.$route.query.baseCategoryId || null
 		this.getBaseCategoryList()
-		this.getQuerySubCategoryList()
+		this.markListData = JSON.parse(sessionStorage.CategoryList)
+		
+		//首页
+		if (!this.currentTypeId && !this.baseCategoryId) {
+			this.getBaseRestaurantList()
+		} else {
+			this.getRestaurantList()
+		}
 	},
 	components: {
 		VHeader,
@@ -189,18 +69,12 @@ export default {
 				this.baseCategory = rs.resultData
 			})
 		},
-		getQuerySubCategoryList () {
+		getRestaurantList (page) {
 			let data = {
-				parentId: this.baseCategoryId
-			}
-			querySubCategoryList(data).then(rs => {
-				this.markListData = rs.resultData
-			})
-		},
-		getRestaurantList (id, page) {
-			let data = {
-				categoryId: id,
-				pageNum: page
+				parentCategoryCode: this.baseCategoryId,
+				categoryCode: this.currentTypeId,
+				pageNum: page,
+				locationFlag: 'Y'
 			}
 			restaurantList(data).then(rs=>{
 				this.shopListData = rs.resultData
@@ -209,13 +83,22 @@ export default {
 		clickBaseCategotry(id) {
 			this.baseCategoryId = id
 			this.currentTypeId = null //置空二级分类
-			this.getQuerySubCategoryList()
 			this.getRestaurantList()
 		},
-		clickCategory (id) {
-			console.log(id)
-			this.currentTypeId = id
+		clickCategory (item) {
+			this.currentTypeId = item.code
+			this.baseCategoryId = item.parentCode
+			
 			this.getRestaurantList()
+		},
+		getBaseRestaurantList (page = 1) {
+			baseRestaurantList({pageNum: page}).then(rs => {
+				if (this.shopListData.length == 0) {
+					this.shopListData = rs.resultData
+				} else {
+					this.shopListData.concat(rs.resultData)
+				}
+			})
 		},
 		goback () {
 			this.$router.go(-1)
