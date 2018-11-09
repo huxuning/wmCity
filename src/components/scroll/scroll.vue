@@ -50,7 +50,7 @@
         },
         stopPropagation: {
           type: Boolean,
-          default: true
+          default: false
         }
       },
       mounted () {
@@ -75,11 +75,18 @@
               this.$emit('scroll', pos)
             })
             this.scroll.on('scrollEnd', (pos) => {
+              console.log(pos)
               this.$emit('scrollToEnd', pos)
             })
           }
           if (this.pullup) {
             this.scroll.on('scrollEnd', () => {
+              if (this.scroll.y <= (this.scroll.maxScrollY)) {
+                this.$emit('scrollEnd')
+              }
+            })
+
+            this.scroll.on('scroll', () => {
               if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
                 this.$emit('scrollToEnd')
               }

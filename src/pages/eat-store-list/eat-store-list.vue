@@ -1,7 +1,7 @@
 <template>
 	<div @touchmove.prevent style="height:100%">
 		<v-header showLeft title="商铺列表" @clickBack="goback"></v-header>
-		<scroll v-if="shopListData" :data="shopListData" class="shop-list-wrap"  :pullup="true">
+		<scroll v-if="shopListData" :data="shopListData" class="shop-list-wrap"  :pullup="true"  @scrollToEnd="scrollToEnd">
 			<div>
 				<!-- 商铺类型 -->
 				<div class="base-category">
@@ -37,7 +37,8 @@ export default {
 			shopListData: [],
 			baseCategory: [],
 			activeTypeIdx: 0,
-			currentTypeId: null
+			currentTypeId: null,
+			scrollFlag: false
 		}
 	},
 	mounted () {
@@ -77,7 +78,16 @@ export default {
 				locationFlag: 'Y'
 			}
 			restaurantList(data).then(rs=>{
-				this.shopListData = rs.resultData
+				this.scrollFlag = false
+				if (this.shopListData.length == 0) {
+					this.shopListData = rs.resultData
+				} else {
+					if (rs.resultData.length) {
+						this.shopListData= [...this.shopListData, ...rs.resultData]
+					} else {
+
+					}
+				}
 			})
 		},
 		clickBaseCategotry(id) {
@@ -93,19 +103,43 @@ export default {
 		},
 		getBaseRestaurantList (page = 1) {
 			baseRestaurantList({pageNum: page}).then(rs => {
+				this.scrollFlag = false
 				if (this.shopListData.length == 0) {
 					this.shopListData = rs.resultData
 				} else {
-					this.shopListData.concat(rs.resultData)
+					if (rs.resultData.length) {
+						this.shopListData= [...this.shopListData, ...rs.resultData]
+					} else {
+
+					}
 				}
 			})
 		},
 		goback () {
 			this.$router.go(-1)
+		},
+		scrollToEnd() {
+			if (this.scrollFlag) return;
+			this.shopPage++
+			this.scrollFlag = true
+			if (!this.currentTypeId && !this.baseCategoryId) {
+				this.getBaseRestaurantList(this.shopPage)
+			} else {
+				this.getRestaurantList(this.shopPage)
+			}
 		}
 	},
 	watch: {
-
+		baseCategoryId: function (val) {
+			this.shopPage = 1
+			this.scrollFlag = false
+			this.shopListData = []
+		},
+		currentTypeId: function (val) {
+			this.shopPage = 1
+			this.scrollFlag = false
+			this.shopListData = []
+		}
 	}
 }
 

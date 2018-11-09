@@ -45,7 +45,8 @@ export default new Router({
       name: 'EatStoreDetail',
       component: EatStoreDetail,
       meta: {
-        title: '店铺首页'
+        title: '店铺首页',
+        keepAlive: false
       }
     },
     {

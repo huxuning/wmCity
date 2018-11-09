@@ -2,7 +2,7 @@
 	<div  @touchmove.prevent style="height:100%">
 		
 		<v-header :showLeft="false" :showRight="false" title="好吃首页"></v-header>
-		<scroll :data="shopListData" class="shop-list-wrap"  :pullup="true">
+		<scroll :data="shopListData" :pullup="true" class="shop-list-wrap" @scrollToEnd="scrollToEnd">
 
 			<div>
 				<!-- banner -->
@@ -45,7 +45,9 @@ export default {
 			baseCategory: [],
 			markListData: [],
 			shopListData: [],
-			shopPage: 1
+			shopPage: 1,
+			maxPage: 0,
+			scrollFlag: false
 		}
 	},
 	mounted () {
@@ -79,10 +81,15 @@ export default {
 		getBaseRestaurantList () {
 			let page = this.shopPage
 			baseRestaurantList({pageNum: page}).then(rs => {
+				this.scrollFlag = false
 				if (this.shopListData.length == 0) {
 					this.shopListData = rs.resultData
 				} else {
-					this.shopListData.concat(rs.resultData)
+					if (rs.resultData.length) {
+						this.shopListData= [...this.shopListData, ...rs.resultData]
+					} else {
+
+					}
 				}
 			})
 		},
@@ -124,6 +131,12 @@ export default {
 					baseCategoryId: id
 				}
 			})
+		},
+		scrollToEnd() {
+			if (this.scrollFlag) return;
+			this.shopPage++
+			this.scrollFlag = true
+			this.getBaseRestaurantList()
 		}
 	}, 
 	watch: {
