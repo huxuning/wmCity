@@ -101,10 +101,21 @@ export default {
 			chooseGoodsNumber: []
 		}
 	},
+	beforeRouteEnter (to, from, next) {
+		console.log(from)
+		if (from.name != 'ShippingAddress') {
+			next(vm=>{
+				vm.init()
+			})
+		} else {
+			next()
+		}
+	},
 	mounted(){
 		this.getRestaurantInfo()
 		this.getGoodsCategoryList()
 		this.getRestaurantLocation()
+		console.log('重新进入')
 	},
 	components: {
 		VHeader,
@@ -133,6 +144,13 @@ export default {
 		}
 	},
 	methods: {
+		init () {
+			this.getRestaurantInfo()
+			this.getGoodsCategoryList()
+			this.getRestaurantLocation()
+			this.chooseGoods = []
+			this.chooseGoodsNumber = []
+		},
 		getRestaurantInfo () {
 			let id = this.$route.query.shopId
 			restaurantInfo({id: id}).then(rs => {
@@ -217,22 +235,11 @@ export default {
 		goPay () {
 			if (!this.canConfirem) return;
 			this.$router.push({
-				path: '/EatStoreList'
+				path: '/ShippingAddress'
 			})
 		},
 		goback() {
 			this.$router.go(-1)
-		}
-	},
-	beforeRouteLeave (to, from, next) {
-		if (to.name === 'EatStoreList') {
-			console.log('keep')
-			this.$route.meta.keepAlive = true
-			next()
-		} else {
-			console.log('no keep')
-			this.$route.meta.keepAlive = false	
-			next()
 		}
 	},
 	watch: {

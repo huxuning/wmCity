@@ -41,19 +41,18 @@ export default {
 			scrollFlag: false
 		}
 	},
-	mounted () {
-		this.currentTypeId = this.$route.query.categoryId ? this.$route.query.categoryId : null
-		this.isTakeUp = !(this.$route.query.categoryId == null)
-		this.baseCategoryId = this.$route.query.baseCategoryId || null
-		this.getBaseCategoryList()
-		this.markListData = JSON.parse(sessionStorage.CategoryList)
-		
-		//首页
-		if (!this.currentTypeId && !this.baseCategoryId) {
-			this.getBaseRestaurantList()
+	beforeRouteEnter (to, from, next) {
+		console.log(from)
+		if (from.name != 'EatStoreDetail') {
+			next(vm=>{
+				vm.init()
+			})
 		} else {
-			this.getRestaurantList()
+			next()
 		}
+	},
+	mounted () {
+		this.init()
 	},
 	components: {
 		VHeader,
@@ -65,6 +64,20 @@ export default {
 
 	},
 	methods: {
+		init () {
+			this.currentTypeId = this.$route.query.categoryId ? this.$route.query.categoryId : null
+			this.isTakeUp = !(this.$route.query.categoryId == null)
+			this.baseCategoryId = this.$route.query.baseCategoryId || null
+			this.getBaseCategoryList()
+			this.markListData = JSON.parse(sessionStorage.CategoryList)
+			this.shopListData = []
+			//首页
+			if (!this.currentTypeId && !this.baseCategoryId) {
+				this.getBaseRestaurantList()
+			} else {
+				this.getRestaurantList()
+			}
+		},
 		getBaseCategoryList () {
 			baseCategoryList().then(rs => {
 				this.baseCategory = rs.resultData

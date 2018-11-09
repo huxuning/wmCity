@@ -30,7 +30,8 @@ export default new Router({
       name: 'EatHome',
       component: EatHome,
       meta: {
-        title: '好吃首页'
+        title: '好吃首页',
+        keepAlive: true
       },
     },
     {
@@ -38,7 +39,8 @@ export default new Router({
       name: 'EatStoreList',
       component: EatStoreList,
       meta: {
-        title: '商铺列表'
+        title: '商铺列表',
+        keepAlive: true
       }
     },
     {
@@ -47,7 +49,7 @@ export default new Router({
       component: EatStoreDetail,
       meta: {
         title: '店铺首页',
-        keepAlive: false
+        keepAlive: true
       }
     },
     {
@@ -88,3 +90,13 @@ export default new Router({
     }
   ]
 })
+// router.beforeEach((to, from, next) => {
+//   if (to.meta.needLogin && authCode === null) {
+//     next({
+//       name: 'login',
+//       params: {redirect: to.path}
+//     })
+//   } else {
+//     next()
+//   }
+// })
