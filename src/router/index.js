@@ -6,6 +6,7 @@ import EatHome from 'pages/eat-home/eat-home'  // 好吃首页
 import EatStoreList from 'pages/eat-store-list/eat-store-list' // 商铺列表
 import EatStoreDetail from 'pages/eat-store-detail/eat-store-detail'  // 商铺详情
 import EatOrderComfirm from 'pages/eat-order-comfirm/eat-order-comfirm'  // 商铺详情
+import ShippingAddress from 'pages/shipping-address/shipping-address' // 配送地址页
 import Demo from 'pages/demo/demo'
 Vue.use(Router)
 
@@ -56,6 +57,15 @@ export default new Router({
       meta: {
         needLogin: true,
         title: '订单支付'
+      }
+    },
+    {
+      path: '/ShippingAddress',
+      name: 'ShippingAddress',
+      component: ShippingAddress,
+      meta: {
+        needLogin: true,
+        title: '配送地址'
       }
     },
     {
