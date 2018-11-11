@@ -90,3 +90,19 @@ export function restaurantLocation (params) {
     method: 'get'
   })
 }
+
+//店铺活动获取
+export function queryDiscountList (params) {
+  return axios({
+    url: '/catering/discount/queryDiscountList/'+params.id,
+    method: 'get'
+  })
+}
+
+//获取汇率 
+export function getExchangeRate () {
+  return axios({
+    url: '/components/exchangeRate/getExchangeRate',
+    method: 'get'
+  })
+}

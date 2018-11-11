@@ -31,7 +31,8 @@ export default new Router({
       component: EatHome,
       meta: {
         title: '好吃首页',
-        keepAlive: true
+        keepAlive: true,
+        needFooter: true
       },
     },
     {
