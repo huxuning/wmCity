@@ -1,7 +1,8 @@
 <template>
 	<div  @touchmove.prevent style="height:100%">
 		<v-header showLeft  title="店铺详情" @clickBack="goback"></v-header>
-		<!-- <scroll v-if="shopInfo" :data="shopInfo" class="shop-info-wrap"> -->
+		<scroll v-if="shopInfo" :data="shopInfo" class="shop-info-wrap">
+			<div>
 			<div>
 				<div class="shop-item">
 					<div class="left-shop-img" :style="{ background: 'url(' + shopInfo.coverPicture + ') no-repeat', backgroundSize: '100% 100%'}">
@@ -29,31 +30,52 @@
 					<span :class="{active: shopTab == 2}" @click="clickTab(2)">商家</span>
 				</div>
 			</div>			
-		<!-- </scroll> -->
-		<div class="stro-content">
-			<scroll :data="goodsCategoryList" class="goods-category-scroll" :stopPropagation="true">
-			
-				<div class="content-left">
-					<p v-for="(item, index) in goodsCategoryList" :key="item.id" class="category-item" :class="{active: targetCategory == item.id}" @click="clickCategory(item.id)">{{item.name}}</p>
-				</div>
-			</scroll>
+			<!-- 商家菜单页 -->
+			<div v-show ="shopTab==1" class="stro-content">
+				<!-- <scroll :data="goodsCategoryList" class="goods-category-scroll" :stopPropagation="true"> -->
 				
-			<scroll :data="goodsList" class="goods-list-scroll" :stopPropagation="true">
-				<div class="content-right">
-					<div class="goods-item" v-for="item in goodsList" :key="item.id">
-						<img v-lazy="item.coverPicture" alt="">
-						<div class="goods-info">
-							<p><i class="icon-ai45"></i><span>{{item.name}}</span></p>
-							<div>
-								<p class="good-price">€{{item.discountPrice}} <span v-if="item.discountPrice != item.price">€{{item.price}}</span></p>
-								<span class="add" @click="addCart(item)"> <i class="icon-jiahao"></i></span>
+					<div class="content-left">
+						<p v-for="(item, index) in goodsCategoryList" :key="item.id" class="category-item" :class="{active: targetCategory == item.id}" @click="clickCategory(item.id)">{{item.name}}</p>
+					</div>
+				<!-- </scroll> -->
+					
+				<scroll :data="goodsList" class="goods-list-scroll" :stopPropagation="true">
+					<div class="content-right">
+						<div class="goods-item" v-for="item in goodsList" :key="item.id">
+							<img v-lazy="item.coverPicture" alt="">
+							<div class="goods-info">
+								<p><i class="icon-ai45"></i><span class="good-name">{{item.name}}</span></p>
+								<div>
+									<p class="good-price">€{{item.discountPrice}} <span v-if="item.discountPrice != item.price">€{{item.price}}</span></p>
+									<span class="add" @click="addCart(item)"> <i class="icon-jiahao"></i></span>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</scroll>
+				</scroll>
+			</div>
 		</div>
-    <Popup ref="cart" position="bottom" closeOnClickMask>
+	</scroll>
+
+		<!-- 商家信息详情 -->
+		<div v-show ="shopTab==2" class="shop-adress">
+			<div class="time">
+				<label><img src="../../common/image/clock.png">营业时间</label>
+				<p>{{shopInfo.serviceTimeDesc}}</p>	
+			</div>	
+			<div class="address">
+				<label><img src="../../common/image/dingwei.png">店铺地址</label>
+				<div>
+					<img src="../../common/image/地图.png" alt="">
+				</div>
+			</div>
+		</div>		
+		<div class="cart-wrap" v-show="shopTab==1">
+			<div class="cart" @click="showCart"><i class="icon-gouwuche"></i> <span v-show="totalNumber">{{totalNumber}}</span></div>
+			<div class="total-price"><span>{{totalPrice ? '€'+totalPrice : '未选购商品'}}</span></div>
+			<div class="confirm" :class="{'can-confirm': canConfirem}" @click="goPay">{{ !canConfirem ?　('€'+shopInfo.amountLimit+'起送') : '立即结算'}}</div>
+		</div>
+		<Popup ref="cart" position="bottom" closeOnClickMask>
 			<div class="cart-list" @click.stop="">
 				<div class="list-head"><span>已选商品</span> <span @click="clearCartList" style="font-size:14px;float:right;">清空</span></div>
 				<scroll class="cart-list-scroll">
@@ -72,18 +94,11 @@
 				</scroll>		
 			</div>
 		</Popup>
-		
-		<div class="cart-wrap">
-			<div class="cart" @click="showCart"><i class="icon-gouwuche"></i> <span v-show="totalNumber">{{totalNumber}}</span></div>
-			<div class="total-price"><span>{{totalPrice ? '€'+totalPrice : '未选购商品'}}</span></div>
-			<div class="confirm" :class="{'can-confirm': canConfirem}" @click="goPay">{{ !canConfirem ?　('€'+shopInfo.amountLimit+'起送') : '立即结算'}}</div>
-		</div>	
-		
 	</div>  
 </template>
 
 <script>
-import {restaurantInfo, goodsCategoryList, goodsList, restaurantLocation} from 'api/eat.js'
+import {restaurantInfo, goodsCategoryList, goodsList, restaurantLocation, queryDiscountList} from 'api/eat.js'
 import VHeader from 'components/v-header/v-header'
 import Scroll from 'components/scroll/scroll'
 import util from 'common/js/util.js'
@@ -98,12 +113,12 @@ export default {
 			shopTab: 1,
 			goodsList:[],
 			chooseGoods: [],
-			chooseGoodsNumber: []
+			chooseGoodsNumber: [],
+			discountList: []
 		}
 	},
 	beforeRouteEnter (to, from, next) {
-		console.log(from)
-		if (from.name != 'ShippingAddress') {
+		if (from.name != 'EatOrderComfirm') {
 			next(vm=>{
 				vm.init()
 			})
@@ -115,7 +130,7 @@ export default {
 		this.getRestaurantInfo()
 		this.getGoodsCategoryList()
 		this.getRestaurantLocation()
-		console.log('重新进入')
+		this.getDiscountList()
 	},
 	components: {
 		VHeader,
@@ -155,7 +170,6 @@ export default {
 			let id = this.$route.query.shopId
 			restaurantInfo({id: id}).then(rs => {
 				this.shopInfo = rs.resultData
-				console.log(rs.resultData.notice)
 				this.shopInfo.notice = rs.resultData.notice.replace(/[\n]/g, '<br/>')
 			})
 		},
@@ -214,9 +228,7 @@ export default {
 			this.targetCategory = id
 		},
 		addCart(item) {
-			console.log(item)
 			let index = this.chooseGoods.indexOf(item)
-			console.log(index)			
 			if (index == -1) {
 				this.chooseGoods.push(item)
 				this.chooseGoodsNumber.push(1)
@@ -229,13 +241,25 @@ export default {
 		getRestaurantLocation () {
 			let id = this.$route.query.shopId
 			restaurantLocation({id:id}).then(rs=>{
+
+			})
+		},
+		getDiscountList () {
+			let id = this.$route.query.shopId
+			queryDiscountList({id: id}).then(rs => {
+				this.discountList = rs.resultData
 				console.log(rs)
 			})
 		},
 		goPay () {
 			if (!this.canConfirem) return;
 			this.$router.push({
-				path: '/ShippingAddress'
+				name: 'EatOrderComfirm',
+				params: {
+					chooseGoods: this.chooseGoods,
+					chooseGoodsNumber: this.chooseGoodsNumber,
+					shopId: this.$route.query.shopId
+				}
 			})
 		},
 		goback() {
@@ -258,7 +282,7 @@ export default {
 	.shop-info-wrap{
 		position: absolute;
 		top: 0.86rem;
-		bottom: 0;
+		bottom: 1rem;
 		left: 0;
 		right: 0;
 		z-index:1;
@@ -376,15 +400,12 @@ export default {
 	}
 	.stro-content{
 		width:100%;
-		position: absolute;
-		top: 4.5rem;
-		bottom: 1rem;
-		left:0;
-		right:0;
-		z-index:2;
+		height:7rem;
+		position: relative;
 		// overflow: hidden;
 		.content-left{
 			width:1.8rem;
+			min-height: 7rem;
 			background: #f3f7fb;
 			.category-item{
 				text-align: center;
@@ -420,27 +441,41 @@ export default {
 				img{
 					display: inline-block;
 					border-radius: 5px;
-					width:1rem;
-					height:1rem;
+					width:1.2rem;
+					height:1.2rem;
 				}
 				.goods-info{
 					display: inline-block;
 					vertical-align: top;
 					font-size: 16px;
-					height:1rem;
+					height:1.2rem;
+					position: relative;
+					.good-name{
+						width: 2.5rem;
+						display: inline-block;
+						font-size: 14px;
+						padding-left:24px;
+					}
 					.icon-ai45{
 						color: $color-primary;
 						padding:0 .05rem;
+						vertical-align: top;
+						position: absolute;
+						top:0;
+						left:0;
 					}
 					.good-price{
 						color: $color-primary;
-						margin-top:.5rem;
 						padding-left:.05rem;
+						position: absolute;
+						bottom:0;
+						left:0;
 						span{
 							color:#999;
 							text-decoration: line-through;
 							font-size: 12px;
 							padding-left:5px;
+							
 						}
 					}
 					.add{
@@ -454,7 +489,7 @@ export default {
 						border-radius: 50%;
 						background: $color-primary;
 						right:.2rem;
-						top:.55rem;
+						top:.85rem;
 					}
 				}
 			}
@@ -465,7 +500,7 @@ export default {
 		height:1rem;
 		position: fixed;
 		bottom:0;
-		z-index:2002;
+		z-index:2004;
 		line-height: 1rem;
 		background: #fff;
 
@@ -539,15 +574,69 @@ export default {
 			overflow: hidden;
 		}
 		.list-item{
-			line-height: .68rem;
+			min-height: .68rem;
 			padding:0 .3rem;
 			background: #fff;
 			margin-bottom:.1rem;
+			position: relative;
 			@include border-retina(#eee);
+			&>span{
+				display: inline-block;
+				width: 45%;
+				font-size: 14px;
+				line-height: 16px;
+				padding: .2rem 0;
+			}
+			&>div{
+				position: absolute;
+				top: 50%;
+				margin-top: -.34rem;
+				right: .2rem;
+			}
 			i{
 				font-size: .35rem;
 				color: $color-primary;
 				margin: 0 10px;
+			}
+		}
+	}
+	.shop-adress{
+		padding:.3rem;
+		font-size: 18px;
+		.time{
+			overflow: hidden;
+			line-height: .5rem;
+			margin-bottom: .3rem;
+			label{
+				float: left;
+				color: #999;
+			}
+			img{
+				width:.3rem;
+				height:.3rem;
+				margin-right: .15rem;
+			}
+			p{
+				float: right;
+			}
+		}
+		.address {
+			label{
+				color: #999;
+				img{
+					width: .3rem;
+					height: .3rem;
+					display: inline;
+					margin-right: .15rem;		
+				}
+			}
+			div{
+				margin-top: .2rem;
+			}
+			img{
+				width:100%;
+				height:100%;
+				display: block;
 			}
 		}
 	}
