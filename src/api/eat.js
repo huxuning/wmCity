@@ -90,3 +90,35 @@ export function restaurantLocation (params) {
     method: 'get'
   })
 }
+
+// 新增收货人信息
+export function insertCateringContacts (params = {}) {
+  let data = {
+    userKey: '',
+    name: '',
+    phone: '',
+    cityCode: '',
+    cityName: '',
+    districtCode: '',
+    districtName: '',
+    address: '',
+    longitude: '',
+    latitude: '',
+    defaultFlag: '',
+    label: '',
+    ...params
+  }
+  return axios({
+    url: '/catering/contacts/insertCateringContacts/',
+    method: 'post',
+    data: data
+  })
+}
+
+// 查询用户收货人列表
+export function searchHistoryContacts (params) {
+  return axios({
+    url: '/catering/contacts/queryCateringContactsList/' + params.userKey + '/' + params.pageNum,
+    method: 'get'
+  })
+}
