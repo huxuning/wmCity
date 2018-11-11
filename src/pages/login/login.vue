@@ -1,5 +1,6 @@
 <template>
   <div @touchmove.prevent style="height:100%">
+		<v-header title="登录"  @clickBack="goback"></v-header>
     <div class="content">
       <p class="welcome-title">欢迎登陆微米城市</p>
       <div class="login-form">
@@ -13,10 +14,11 @@
 
 <script>
   
+  import VHeader from 'components/v-header/v-header'
   export default {
     name: 'app',
     components: {
-
+      VHeader
     },
     data () {
       return {
@@ -24,7 +26,9 @@
       }
     },
     methods: {
-      
+      goback() {
+        this.$router.go(-1)
+      }
     },
     mounted () {
     

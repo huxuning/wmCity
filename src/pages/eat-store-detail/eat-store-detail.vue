@@ -42,7 +42,7 @@
 				<scroll :data="goodsList" class="goods-list-scroll" :stopPropagation="true">
 					<div class="content-right">
 						<div class="goods-item" v-for="item in goodsList" :key="item.id">
-							<img v-lazy="item.coverPicture" alt="">
+							<img v-lazy="item.coverPicture" alt="" @click="showImg(item)">
 							<div class="goods-info">
 								<p><i class="icon-ai45"></i><span class="good-name">{{item.name}}</span></p>
 								<div>
@@ -96,6 +96,13 @@
 				</scroll>		
 			</div>
 		</Popup>
+		<popup ref="imgDialog" position="bottom" closeOnClickMask>
+			<div class="imgDialog">
+				<img :src="goodInfo.coverPicture" alt="">
+				<span>{{goodInfo.name}}</span>
+				<p>€{{goodInfo.price}}</p>
+			</div>
+		</popup>
 	</div>  
 </template>
 
@@ -116,7 +123,8 @@ export default {
 			goodsList:[],
 			chooseGoods: [],
 			chooseGoodsNumber: [],
-			discountList: []
+			discountList: [],
+			goodInfo: {}
 		}
 	},
 	beforeRouteEnter (to, from, next) {
@@ -162,11 +170,14 @@ export default {
 	},
 	methods: {
 		init () {
+			this.goodsList = []
+			this.goodsCategoryList = []
+			this.chooseGoods = []
+			this.chooseGoodsNumber = []
 			this.getRestaurantInfo()
 			this.getGoodsCategoryList()
 			this.getRestaurantLocation()
-			this.chooseGoods = []
-			this.chooseGoodsNumber = []
+			
 		},
 		getRestaurantInfo () {
 			let id = this.$route.query.shopId
@@ -263,6 +274,10 @@ export default {
 					shopId: this.$route.query.shopId
 				}
 			})
+		},
+		showImg (item) {
+			this.goodInfo = item
+			this.$refs.imgDialog.show()
 		},
 		goback() {
 			this.$router.go(-1)
@@ -402,7 +417,7 @@ export default {
 	}
 	.stro-content{
 		width:100%;
-		height:7rem;
+		// height:7rem;
 		position: relative;
 		// overflow: hidden;
 		.content-left{
@@ -640,6 +655,29 @@ export default {
 				height:100%;
 				display: block;
 			}
+		}
+	}
+	.imgDialog{
+		width: 4.6rem;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin-top: -3.3rem;
+		margin-left: -2.3rem;
+		border: 1px solid #ccc;
+		background: #fff;
+		font-size: 16px;
+		line-height: 24px;
+		img {
+			width:100%;
+			height: 4.6rem;
+		}
+		span{
+			padding-left: .1rem;
+		}
+		p{
+			padding-left: .1rem;
+			color:$color-primary;
 		}
 	}
 </style>

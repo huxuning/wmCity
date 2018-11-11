@@ -14,9 +14,10 @@ Vue.use(VueLazyload, {
 })
 fastclick.attach(document.body)
 /* eslint-disable no-new */
-new Vue({
+var vm = new Vue({
   el: '#app',
   router,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
 })
+console.log(vm)

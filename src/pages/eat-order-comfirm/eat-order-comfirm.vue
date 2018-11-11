@@ -18,7 +18,7 @@
 					</div>
 				</div>
 				<div class="order-top">
-					<div class="peisong" v-show="activeRadioNum == 0">
+					<div class="peisong" v-show="activeRadioNum == 0" @click="goGetContact">
 						<img src="../../common/image/dingwei.png" alt="">
 						<span>收货人：</span>
 						<span>{{contact.name}}</span>
@@ -137,6 +137,15 @@ export default {
 			changeRate: ''
 		}
 	},
+	beforeRouteEnter (to, from, next) {
+		if (from.name != 'ShippingAddress') {
+			next(vm=>{
+				vm.init()
+			})
+		} else {
+			next()
+		}
+	},
 	mounted(){
 		this.getRestaurantInfo ()
 		this.getExchangeRate()
@@ -153,6 +162,12 @@ export default {
 
 	},
 	methods: {
+		init () {
+			this.getRestaurantInfo ()
+			this.getExchangeRate()
+			this.chooseGoods = this.$route.params.chooseGoods
+			this.chooseGoodsNumber = this.$route.params.chooseGoodsNumber
+		},
 		goback() {
 			this.$router.go(-1)
 		},
@@ -186,6 +201,11 @@ export default {
 			this.contact.takeTime = val
 			console.log(formatDate(val, 'yyyy-MM-dd hh:mm:ss'))
 			this.peisongTime = formatDate(val, 'yyyy-MM-dd hh:mm:ss')
+		},
+		goGetContact () {
+			this.$router.push({
+				name: 'ShippingAddress'
+			})
 		}
 	},
 	watch: {

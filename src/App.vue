@@ -4,28 +4,6 @@
         <router-view v-if="$route.meta.keepAlive"></router-view>
     </keep-alive>
     <router-view v-if="!$route.meta.keepAlive"></router-view>
-    <div class="root-footer" v-if="$route.meta.hasFooter">
-      <div>
-        <i class="icon-fangzidichan"></i>
-        <span>租房</span>
-      </div>
-      <div>
-        <i class="icon-xuesheng"></i>
-        <span>留学</span>
-      </div>
-      <div class="active">
-        <i class="icon-caipin-"></i>
-        <span>好吃</span>
-      </div>
-      <div>
-        <i class="icon-zhanshiwenzhang"></i>
-        <p>视野</p>
-      </div>
-      <div>
-        <i class="icon-wo10"></i>
-        <span>我</span>
-      </div>
-    </div>
   </div>
 </template>
 

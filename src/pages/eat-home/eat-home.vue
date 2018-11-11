@@ -36,20 +36,21 @@
 			</div>
 			
 		</scroll>
-			
 		
+		<v-footer active="2"></v-footer>
 	</div>
 </template>
 
 <script>
 import VHeader from 'components/v-header/v-header'
+import VFooter from 'components/footer/footer'
 import RatingStar from 'components/ratingStar/ratingStar'
 import Slider from 'components/slider/slider'
 import MarkList from 'components/mark-list/mark-list'
 import Scroll from 'components/scroll/scroll'
 import ShopList from 'components/shop-list/shop-list'
 import {baseCategoryList, baseRestaurantList, querySubCategoryList, cateringRecommendList} from 'api/eat.js'
-
+console.log(VFooter)
 export default {
 	data () {
 		return {
@@ -80,7 +81,8 @@ export default {
 		RatingStar,
 		MarkList,
 		ShopList,
-		Scroll
+		Scroll,
+		VFooter
 	},
 	computed: {
 

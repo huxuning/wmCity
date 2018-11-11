@@ -32,10 +32,12 @@
 				</div>
 			</div>
 		</div>
+		<v-footer active="4"></v-footer>		
 	</div>
 </template>
 <script>
 	import VHeader from 'components/v-header/v-header'
+	import VFooter from 'components/footer/footer'
 	export default{
 		data () {
 			return {
@@ -43,7 +45,8 @@
 			}
 		},
 		components: {
-			VHeader
+			VHeader,
+			VFooter
 		},
 		mounted () {
 

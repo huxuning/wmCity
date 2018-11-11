@@ -33,7 +33,8 @@ export default new Router({
       meta: {
         title: '好吃首页',
         keepAlive: true,
-        needFooter: true
+        needFooter: true,
+        footIndex: 2
       },
     },
     {
@@ -60,6 +61,7 @@ export default new Router({
       component: EatOrderComfirm,
       meta: {
         needLogin: true,
+        keepAlive: true,
         title: '订单支付'
       }
     },
@@ -78,7 +80,9 @@ export default new Router({
       component: PersonCenter,
       meta: {
         needLogin: true,
-        title: '个人中心'
+        title: '个人中心',
+        needFooter: true,
+        footIndex: 4
       }
     },
     {
