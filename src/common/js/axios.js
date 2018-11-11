@@ -4,6 +4,7 @@ import qs from 'qs'
 import Toast from 'components/toast/'
 import router from '../../router'
 import cookie from 'common/js/cookie'
+
 // 请求成功，返回的状态码不是200时调用
 const statusError = (data) => {
   

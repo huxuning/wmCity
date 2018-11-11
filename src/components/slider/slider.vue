@@ -52,7 +52,7 @@
       }, 20)
 
       window.addEventListener('resize', () => {
-        if (!this.slider || !this.slider.enabled) {
+        if (!this.slider) {
           return
         }
         clearTimeout(this.resizeTimer)

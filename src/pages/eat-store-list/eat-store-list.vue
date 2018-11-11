@@ -15,6 +15,10 @@
 				<div class="list-wrap">
 					<shop-list :shopListData="shopListData"></shop-list>
 				</div>
+				<div class="loading" v-show="scrollFlag && isLoading">
+					<img src="../../common/image/loading.gif" alt="">
+				</div>
+				<div class="loading" v-show="scrollFlag && !isLoading">我们是有底线的</div>
 			</div>
 		</scroll>
 	</div>    
@@ -38,7 +42,8 @@ export default {
 			baseCategory: [],
 			activeTypeIdx: 0,
 			currentTypeId: null,
-			scrollFlag: false
+			scrollFlag: false,
+			isLoading: false
 		}
 	},
 	beforeRouteEnter (to, from, next) {
@@ -92,6 +97,7 @@ export default {
 			}
 			restaurantList(data).then(rs=>{
 				this.scrollFlag = false
+				this.isLoading = false
 				if (this.shopListData.length == 0) {
 					this.shopListData = rs.resultData
 				} else {
@@ -117,6 +123,7 @@ export default {
 		getBaseRestaurantList (page = 1) {
 			baseRestaurantList({pageNum: page}).then(rs => {
 				this.scrollFlag = false
+				this.isLoading = false
 				if (this.shopListData.length == 0) {
 					this.shopListData = rs.resultData
 				} else {
@@ -135,6 +142,7 @@ export default {
 			if (this.scrollFlag) return;
 			this.shopPage++
 			this.scrollFlag = true
+			this.isLoading = true
 			if (!this.currentTypeId && !this.baseCategoryId) {
 				this.getBaseRestaurantList(this.shopPage)
 			} else {
@@ -186,6 +194,18 @@ export default {
 				background: $color-primary;
 				border-radius: 0.6rem;
 			}	
+		}
+	}
+	.loading{
+		padding:0.3rem 0.26rem;
+		text-align: center;
+		line-height: 1.38rem;
+		img{
+			width:1.38rem;
+			height:1.38rem;
+		}
+		p{
+			font-size: 16px;
 		}
 	}
 </style>

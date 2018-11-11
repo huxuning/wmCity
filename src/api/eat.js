@@ -11,6 +11,18 @@ export function baseCategoryList (params = {}) {
     data: data
   })
 }
+
+//获取首页活动推荐
+export function cateringRecommendList (params = {}) {
+  let data = {
+    ...params
+  }
+  return axios({
+    url: '/catering/recommend/queryCateringRecommendList/'+params.cityName,
+    method: 'get'
+  })
+}
+
 // 获取首页餐饮子分类  (弃)
 export function querySubCategoryList (params = {}) {
   let data ={

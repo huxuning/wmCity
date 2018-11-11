@@ -6,7 +6,14 @@
 
 			<div>
 				<!-- banner -->
-				<slider></slider>
+				<div class="bannerSlider" v-if="bannerList.length">
+					<slider>
+						<div v-for="(item, index) in bannerList" :key="index">
+							<img :src="item.img" alt="">
+						</div>
+				</slider>
+				</div>
+				
 				<!-- 首页分类 -->
 				<div class="base-category-list">
 					<div class="category-item" v-for="item in baseCategory" :key="item.id" @click="clickBaseCategory(item.code)">
@@ -22,6 +29,10 @@
 				<div class="list-wrap">
 					<shop-list :shopListData="shopListData"></shop-list>
 				</div>
+				<div class="loading" v-show="scrollFlag && isLoading">
+					<img src="../../common/image/loading.gif" alt="">
+				</div>
+				<div class="loading" v-show="scrollFlag && !isLoading">我们是有底线的</div>
 			</div>
 			
 		</scroll>
@@ -37,7 +48,7 @@ import Slider from 'components/slider/slider'
 import MarkList from 'components/mark-list/mark-list'
 import Scroll from 'components/scroll/scroll'
 import ShopList from 'components/shop-list/shop-list'
-import {baseCategoryList, baseRestaurantList, querySubCategoryList} from 'api/eat.js'
+import {baseCategoryList, baseRestaurantList, querySubCategoryList, cateringRecommendList} from 'api/eat.js'
 
 export default {
 	data () {
@@ -45,15 +56,17 @@ export default {
 			baseCategory: [],
 			markListData: [],
 			shopListData: [],
+			bannerList: [],
 			shopPage: 1,
 			maxPage: 0,
-			scrollFlag: false
+			scrollFlag: false,
+			isLoading: false
 		}
 	},
 	mounted () {
 		this.getBaseCategoryList()
 		this.getBaseRestaurantList()
-
+		this.getCateringRecommendList()
 		//为了不在其他页面搞一个1-4循环请求，把数据放到storage
 		if (sessionStorage.CategoryList) {
 			this.markListData = JSON.parse(sessionStorage.CategoryList)
@@ -80,7 +93,10 @@ export default {
 		},
 		getBaseRestaurantList () {
 			let page = this.shopPage
+			this.isLoading = true
 			baseRestaurantList({pageNum: page}).then(rs => {
+				this.isLoading = false
+				
 				this.scrollFlag = false
 				if (this.shopListData.length == 0) {
 					this.shopListData = rs.resultData
@@ -115,6 +131,11 @@ export default {
 				})
 			})
 		},
+		getCateringRecommendList () {
+			cateringRecommendList({cityName: '广州'}).then(rs=>{
+				this.bannerList = rs.resultData
+			})
+		},
 		clickMore (item) {
 			this.$router.push({
 				path: '/EatStoreList',
@@ -136,6 +157,7 @@ export default {
 			if (this.scrollFlag) return;
 			this.shopPage++
 			this.scrollFlag = true
+			this.isLoading = true
 			this.getBaseRestaurantList()
 		}
 	}, 
@@ -155,7 +177,7 @@ export default {
 	.shop-list-wrap{
 		position: absolute;
     top: 0.86rem;
-    bottom: 0;
+    bottom: .74rem;
     left: 0;
     right: 0;
 		z-index:9;
@@ -173,6 +195,21 @@ export default {
 			img {
 				max-width: 70%;
 			}
+		}
+	}
+	.bannerSlider{
+		height: 3.24rem;
+	}
+	.loading{
+		padding:0.3rem 0.26rem;
+		text-align: center;
+		line-height: 1.38rem;
+		img{
+			width:1.38rem;
+			height:1.38rem;
+		}
+		p{
+			font-size: 16px;
 		}
 	}
 </style>

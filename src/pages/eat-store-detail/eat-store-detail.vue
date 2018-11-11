@@ -54,22 +54,24 @@
 					</div>
 				</scroll>
 			</div>
+
+			<!-- 商家信息详情 -->
+			<div v-show ="shopTab==2" class="shop-adress">
+				<div class="time">
+					<label><img src="../../common/image/clock.png">营业时间</label>
+					<p>{{shopInfo.serviceTimeDesc}}</p>	
+				</div>	
+				<div class="address">
+					<label><img src="../../common/image/dingwei.png">店铺地址</label>
+					<div>
+						<img src="../../common/image/地图.png" alt="">
+					</div>
+				</div>
+			</div>
 		</div>
 	</scroll>
 
-		<!-- 商家信息详情 -->
-		<div v-show ="shopTab==2" class="shop-adress">
-			<div class="time">
-				<label><img src="../../common/image/clock.png">营业时间</label>
-				<p>{{shopInfo.serviceTimeDesc}}</p>	
-			</div>	
-			<div class="address">
-				<label><img src="../../common/image/dingwei.png">店铺地址</label>
-				<div>
-					<img src="../../common/image/地图.png" alt="">
-				</div>
-			</div>
-		</div>		
+				
 		<div class="cart-wrap" v-show="shopTab==1">
 			<div class="cart" @click="showCart"><i class="icon-gouwuche"></i> <span v-show="totalNumber">{{totalNumber}}</span></div>
 			<div class="total-price"><span>{{totalPrice ? '€'+totalPrice : '未选购商品'}}</span></div>
