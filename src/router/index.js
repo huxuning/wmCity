@@ -7,6 +7,7 @@ import EatStoreList from 'pages/eat-store-list/eat-store-list' // 商铺列表
 import EatStoreDetail from 'pages/eat-store-detail/eat-store-detail'  // 商铺详情
 import EatOrderComfirm from 'pages/eat-order-comfirm/eat-order-comfirm'  // 商铺详情
 import ShippingAddress from 'pages/shipping-address/shipping-address' // 配送地址页
+import PersonCenter from 'pages/person-center/person-center' // 个人中心
 import Demo from 'pages/demo/demo'
 Vue.use(Router)
 
@@ -69,6 +70,15 @@ export default new Router({
       meta: {
         needLogin: true,
         title: '配送地址'
+      }
+    },
+    {
+      path: '/PersonCenter',
+      name: 'PersonCenter',
+      component: PersonCenter,
+      meta: {
+        needLogin: true,
+        title: '个人中心'
       }
     },
     {

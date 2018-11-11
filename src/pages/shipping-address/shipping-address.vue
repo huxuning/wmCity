@@ -1,111 +1,101 @@
 <template>
 	<div @touchmove.prevent style="height:100%">
 		<v-header showLeft title="配送地址" @clickBack="goback"></v-header>
-		<div class="content">
-			<div class="open-time">
-				店铺营业时间：星期一二三四五六12:00-22:30
-			</div>
-			<div class="shipping-type">
-				<div class="shipping-now" @click="activeRadioNum = 0">
-					<span class="radio-btn" :class="{'active-radio': activeRadioNum === 0}">
-						<i class="icon-iconfontcheck"></i>
-					</span>
-					<span class="type-text">尽快配送</span>
+		<scroll class="shipping-address-wrap">
+			<div class="content">
+				<div class="open-time">
+					店铺营业时间：星期一二三四五六12:00-22:30
 				</div>
-				<div class="shipping-later" @click="activeRadioNum = 1">
-					<span class="radio-btn" :class="{'active-radio': activeRadioNum === 1}">
-						<i class="icon-iconfontcheck"></i>
-					</span>
-					<span class="type-text">预约下单</span>
-				</div>
-			</div>
-			<div class="shipping-address-form">
-				<div class="address-form-item">
-					<div class="form-label">
-						<span class="icon-smile"></span>
-						<span>收货人</span>
-					</div>
-					<div class="form-content">
-						<input type="text" placeholder="请输入收货人">
-					</div>
-				</div>
-				<div class="address-form-item">
-					<div class="form-label">
-						<span class="icon-phone"></span>
-						<span>手机号</span>
-					</div>
-					<div class="form-content">
-						<input type="text" placeholder="请输入手机号">
-					</div>
-				</div>
-				<div class="address-form-item">
-					<div class="form-label">
-						<span class="icon-dingwei"></span>
-						<span>邮编</span>
-					</div>
-					<div class="form-content">
-						<input type="text" placeholder="例：75000">
-					</div>
-				</div>
-				<div class="address-form-item">
-					<div class="form-label">
-						<span class="icon-dingwei"></span>
-						<span>收货地址</span>
-					</div>
-					<div class="form-content">
-						<input type="text" placeholder="请输入地址或点击右侧图标选择地址" class="address-input">
-						<span class="position-btn">
-							<i class="icon-dangqian"></i>
+				<div class="shipping-type">
+					<div class="shipping-now" @click="activeRadioNum = 0">
+						<span class="radio-btn" :class="{'active-radio': activeRadioNum === 0}">
+							<i class="icon-iconfontcheck"></i>
 						</span>
+						<span class="type-text">尽快配送</span>
+					</div>
+					<div class="shipping-later" @click="activeRadioNum = 1">
+						<span class="radio-btn" :class="{'active-radio': activeRadioNum === 1}">
+							<i class="icon-iconfontcheck"></i>
+						</span>
+						<span class="type-text">预约下单</span>
 					</div>
 				</div>
-				<div class="address-form-item" v-if="activeRadioNum === 1">
-					<div class="form-label">
-						<span class="icon-rili1"></span>
-						<span>配送时间</span>
+				<div class="shipping-address-form">
+					<div class="address-form-item">
+						<div class="form-label">
+							<span class="icon-smile"></span>
+							<span>收货人</span>
+						</div>
+						<div class="form-content">
+							<input type="text" placeholder="请输入收货人" v-model="newContactData.contactName">
+						</div>
 					</div>
-					<div class="form-content">
-						<input type="text" placeholder="点击选择配送时间" class="address-input" @focus="showTimePick">
+					<div class="address-form-item">
+						<div class="form-label">
+							<span class="icon-phone"></span>
+							<span>手机号</span>
+						</div>
+						<div class="form-content">
+							<input type="text" placeholder="请输入手机号" v-model="newContactData.phone">
+						</div>
 					</div>
-				</div>
+					<!-- <div class="address-form-item">
+						<div class="form-label">
+							<span class="icon-dingwei"></span>
+							<span>邮编</span>
+						</div>
+						<div class="form-content">
+							<input type="text" placeholder="例：75000">
+						</div>
+					</div> -->
+					<div class="address-form-item">
+						<div class="form-label">
+							<span class="icon-dingwei"></span>
+							<span>收货地址</span>
+						</div>
+						<div class="form-content">
+							<input type="text" placeholder="请输入地址或点击右侧图标选择地址" class="address-input" v-model="newContactData.address">
+							<span class="position-btn">
+								<i class="icon-dangqian"></i>
+							</span>
+						</div>
+					</div>
+					<div class="address-form-item" v-if="activeRadioNum === 1">
+						<div class="form-label">
+							<span class="icon-rili1"></span>
+							<span>配送时间</span>
+						</div>
+						<div class="form-content">
+							<input type="text" placeholder="点击选择配送时间" class="address-input" @focus="showTimePick" v-model="shippingTime">
+						</div>
+					</div>
 
-			</div>
-			<div class="history-acepter">
-				<p class="title">历史收货人</p>
-				<div class="history-list">
-					<div class="history-item">
-						<p class="radio-item">
-							<span></span>
-						</p>
-						<div class="detail-content">
-							<div class="name-detail">
-								<p class="name">收货人：张承工</p>
-								<p class="phone">13650794444</p>
+				</div>
+				<div class="history-acepter" v-if="historyListData.length > 0">
+					<p class="title">历史收货人</p>
+					<div class="history-list">
+						<div class="history-item" @click="activeHistoryAddress = index" v-for="(item, index) in historyListData" :key="index">
+							<p class="radio-item" :class="{'active-radio-btn' : activeHistoryAddress === index}">
+								<span></span>
+							</p>
+							<div class="detail-content">
+								<div class="name-detail">
+									<p class="name">收货人：{{item.name}}</p>
+									<p class="phone">{{item.phone}}</p>
+								</div>
+								<p class="address">{{item.address}}</p>
 							</div>
-							<p class="address">河南省郑州市郑东新区金水路陆地新都会A座603</p>
+							<p class="right-btn">
+								<i class="icon-xiangzuo"></i>
+							</p>
 						</div>
-						<p class="right-btn">
-							<i class="icon-xiangzuo"></i>
-						</p>
-					</div>
-					<div class="history-item">
-						<p class="radio-item">
-							<span></span>
-						</p>
-						<div class="detail-content">
-							<div class="name-detail">
-								<p class="name">收货人：张承工</p>
-								<p class="phone">13650794444</p>
-							</div>
-							<p class="address">河南省郑州市郑东新区金水路陆地新都会A座603</p>
-						</div>
-						<p class="right-btn">
-							<i class="icon-xiangzuo"></i>
-						</p>
 					</div>
 				</div>
+				<div class="ok-btn">
+					<button @click="submitNewContact">确定</button>
+				</div>
 			</div>
-		</div>
+		</scroll>
 		<popup ref="pickTime" closeOnClickMask position="bottom">
 			<div class="date-pick-container">
 				<datetime-picker></datetime-picker>
@@ -115,21 +105,29 @@
 </template>
 <script>
 	import VHeader from 'components/v-header/v-header'
+	import Scroll from 'components/scroll/scroll'
 	import Popup from 'components/popup/popup'
 	import DatetimePicker from 'components/datetime-picker/datetime-picker'
+	import {insertCateringContacts, searchHistoryContacts} from 'api/eat.js'
 	export default{
 		data () {
 			return {
-				activeRadioNum: 0
+				activeRadioNum: 0,
+				activeHistoryAddress: 0,
+				newContactData: {},
+				shippingTime: '',
+				historyListPageNum: 1,
+				historyListData: []
 			}
 		},
 		components: {
 			VHeader,
+			Scroll,
 			Popup,
 			DatetimePicker
 		},
 		mounted () {
-			console.log(this.$route)
+			this.getHistoryContacts()
 		},
 		methods: {
 			goback () {
@@ -137,12 +135,40 @@
 			},
 			showTimePick () {
 				this.$refs.pickTime.show()
+			},
+			submitNewContact () {
+				let ajaxData = {
+					userKey: 'oGMYR0Vvcq0fg-V-KoE59ZEm671g', // 用户key先写死
+					name: this.newContactData.contactName,
+					phone: this.newContactData.phone,
+					address: this.newContactData.address
+				}
+				insertCateringContacts(ajaxData).then(rs => {
+				})
+			},
+			getHistoryContacts () {
+				let ajaxData = {
+					userKey: 'oGMYR0Vvcq0fg-V-KoE59ZEm671g', // 用户key先写死
+					pageNum: this.historyListPageNum
+				}
+				searchHistoryContacts(ajaxData).then(rs => {
+					if (rs) {
+						this.historyListData = rs.resultData
+					}
+				})
 			}
 		}
 	}
 </script>
 <style lang="scss" scoped>
 	@import '~common/style/mixin.scss';
+	.shipping-address-wrap{
+		position: absolute;
+    top: 0.86rem;
+    bottom: 0;
+    left: 0;
+    right: 0;
+	}
 	.content{
 		background: #f8f8f8;
 		height: 100%;
@@ -284,11 +310,15 @@
 				font-size: 16px;
 			}
 			.history-item{
-				height: 1.52rem;
-				margin-bottom: 0.26rem;
 				padding: 0.26rem 0.3rem;
 				overflow: hidden;
 				@include border-retina(#ebebeb);
+				display: flex;
+				display: -webkit-flex;
+				align-items: center;
+				-webkit-align-items: center;
+				justify-content: center;
+				-webkit-justify-content: center;
 				&:last-child{
 					margin-bottom: 0;
 					@include border-retina(#fff);
@@ -296,16 +326,28 @@
 			}
 			.radio-item{
 				float: left;
-				width: 0.3rem;
+				width: 0.34rem;
 				height: 0.3rem;
-				line-height: 0.32rem;
+				line-height: 0.3rem;
 				border-radius: 100%;
-				border: 3px solid #0d1c31;
-				margin-right: 0.3rem;
+				border: 2px solid #0d1c31;
+				text-align: center;
+				span{
+					display: inline-block;
+					width: 0.18rem;
+    			height: 0.18rem;
+					border-radius: 100%;
+					background: #fff;
+				}
+				&.active-radio-btn{
+					span{
+						background: #fdce04;
+					}
+				}
 			}
 			.detail-content{
 				float: left;
-				width: calc(100% - 0.3rem - 0.3rem - 0.35rem);
+				margin: 0 0.3rem 0 0.3rem;
 			}
 			.right-btn{
 				float: right;
@@ -315,6 +357,36 @@
 					font-size: 12px;
 					font-weight: bold;
 				}
+			}
+			.name-detail{
+				overflow: hidden;
+				font-size: 14px;
+				margin-bottom: 0.1rem;
+				.name{
+					float: left;
+				}
+				.phone{
+					float: right;
+				}
+			}
+			.address{
+				color: #717171;
+				line-height: 0.34rem;
+			}
+		}
+		.ok-btn{
+			padding: 0.6rem 0.4rem;
+			button{
+				width: 100%;
+				height: 0.8rem;
+				line-height: 0.8rem;
+				text-align: center;
+				color: #fff;
+				background: #f9ab0d;
+				outline: none;
+				border: 0;
+				font-size: 16px;
+				border-radius: 0.8rem;
 			}
 		}
 	}
