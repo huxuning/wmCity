@@ -31,7 +31,7 @@ axios.defaults.timeout = 30 * 1000
 axios.defaults.withCredentials = true
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
 // axios.defaults.headers.post['Data-Type'] = 'json'
-axios.defaults.baseURL = ''
+axios.defaults.baseURL = 'https://i.wemecity.net'
 
 axios.interceptors.request.use((config) => {
   if (config.data && config.data.isValidateRequest) {
@@ -111,7 +111,7 @@ export default function (options) {
 
 axios(
   {
-    url: "/catering/restaurant/queryRecommendRestaurantList/1", 
+    url: "https://i.wemecity.net/catering/restaurant/queryRecommendRestaurantList/1", 
     method: "post", 
     data: {}
   }

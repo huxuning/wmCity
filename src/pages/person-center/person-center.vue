@@ -1,7 +1,7 @@
 <template>
 	<div @touchmove.prevent style="height:100%">
 		<v-header :showLeft="false" :showRight="false" title="个人中心"></v-header>
-		<div class="content">
+		<div class="content-wrap">
 			<div class="person-content">
 				<div class="person-info">
 					<img src="http://b-ssl.duitang.com/uploads/item/201607/29/20160729155407_YSyLE.thumb.700_0.jpeg" alt="">
@@ -57,7 +57,7 @@
 </script>
 <style lang="scss" scoped>
 	@import '~common/style/mixin.scss';
-	.content{
+	.content-wrap{
 		.person-content{
 			height: 2.7rem;
 			background: #f0ece8;

@@ -137,10 +137,10 @@ export default {
 		}
 	},
 	mounted(){
-		this.getRestaurantInfo()
-		this.getGoodsCategoryList()
-		this.getRestaurantLocation()
-		this.getDiscountList()
+		// this.getRestaurantInfo()
+		// this.getGoodsCategoryList()
+		// this.getRestaurantLocation()
+		// this.getDiscountList()
 	},
 	components: {
 		VHeader,

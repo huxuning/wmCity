@@ -65,6 +65,7 @@ export default {
 		}
 	},
 	mounted () {
+		this.getPosition()
 		this.getBaseCategoryList()
 		this.getBaseRestaurantList()
 		this.getCateringRecommendList()
@@ -161,6 +162,19 @@ export default {
 			this.scrollFlag = true
 			this.isLoading = true
 			this.getBaseRestaurantList()
+		},
+		getPosition () {
+			var map = new BMap.Map("allmap")
+			var geolocation = new BMap.Geolocation();
+			geolocation.getCurrentPosition(function(r){
+				if(this.getStatus() == BMAP_STATUS_SUCCESS){
+					sessionStorage.position = [r.point.lng, r.point.lat]
+					alert('您的位置：'+r.point.lng+','+r.point.lat);
+				}
+				else {
+					// alert('failed'+this.getStatus());
+				}        
+			});
 		}
 	}, 
 	watch: {

@@ -147,10 +147,7 @@ export default {
 		}
 	},
 	mounted(){
-		this.getRestaurantInfo ()
-		this.getExchangeRate()
-		this.chooseGoods = this.$route.params.chooseGoods
-		this.chooseGoodsNumber = this.$route.params.chooseGoodsNumber
+		
 	},
 	components: {
 		Scroll,

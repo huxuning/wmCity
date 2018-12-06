@@ -1,3 +1,4 @@
+
 import axios from 'common/js/axios'
 
 //获取首页餐饮一级分类
@@ -82,7 +83,7 @@ export function restaurantInfo (params) {
 //获取商品分类信息
 export function goodsCategoryList (params) {
   return axios({
-    url: '  /catering/goodsCategory/queryGoodsCategoryList/'+params.id,
+    url: '/catering/goodsCategory/queryGoodsCategoryList/'+params.id,
     method: 'get'
   })
 }

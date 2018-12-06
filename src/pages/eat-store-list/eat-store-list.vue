@@ -57,7 +57,7 @@ export default {
 		}
 	},
 	mounted () {
-		this.init()
+		// this.init()
 	},
 	components: {
 		VHeader,
