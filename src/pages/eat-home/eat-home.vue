@@ -8,10 +8,10 @@
 				<!-- banner -->
 				<div class="bannerSlider" v-if="bannerList.length">
 					<slider>
-						<div v-for="(item, index) in bannerList" :key="index">
-							<img :src="item.img" alt="">
-						</div>
-				</slider>
+							<div v-for="(item, index) in bannerList" :key="index">
+								<img :src="item.img" alt="">
+							</div>
+					</slider>
 				</div>
 				
 				<!-- 首页分类 -->
@@ -50,6 +50,7 @@ import MarkList from 'components/mark-list/mark-list'
 import Scroll from 'components/scroll/scroll'
 import ShopList from 'components/shop-list/shop-list'
 import {baseCategoryList, baseRestaurantList, querySubCategoryList, cateringRecommendList} from 'api/eat.js'
+import {getBaiduLocation} from 'api/common.js'
 console.log(VFooter)
 export default {
 	data () {
@@ -68,7 +69,7 @@ export default {
 		this.getPosition()
 		this.getBaseCategoryList()
 		this.getBaseRestaurantList()
-		this.getCateringRecommendList()
+		// this.getCateringRecommendList()
 		//为了不在其他页面搞一个1-4循环请求，把数据放到storage
 		if (sessionStorage.CategoryList) {
 			this.markListData = JSON.parse(sessionStorage.CategoryList)
@@ -134,8 +135,9 @@ export default {
 				})
 			})
 		},
-		getCateringRecommendList () {
-			cateringRecommendList({cityName: '广州'}).then(rs=>{
+		getCateringRecommendList (city) {
+			console.log(city, 'city')
+			cateringRecommendList({cityName: city}).then(rs=>{
 				this.bannerList = rs.resultData
 			})
 		},
@@ -164,12 +166,20 @@ export default {
 			this.getBaseRestaurantList()
 		},
 		getPosition () {
-			var map = new BMap.Map("allmap")
+			let _this = this
+			let map = new BMap.Map("allmap")
 			var geolocation = new BMap.Geolocation();
+			var myGeo = new BMap.Geocoder();  
 			geolocation.getCurrentPosition(function(r){
 				if(this.getStatus() == BMAP_STATUS_SUCCESS){
 					sessionStorage.position = [r.point.lng, r.point.lat]
-					alert('您的位置：'+r.point.lng+','+r.point.lat);
+					console.log('您的位置：'+r.point.lng+','+r.point.lat);
+					let position = new BMap.Point(r.point.lng, r.point.lat)
+					myGeo.getLocation(position, (result)=>	{      
+						if (result){      
+							_this.getCateringRecommendList(result.addressComponents.city)
+						}      
+					});
 				}
 				else {
 					// alert('failed'+this.getStatus());

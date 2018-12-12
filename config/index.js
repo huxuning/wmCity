@@ -11,11 +11,25 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/': {
+      '/catering': {
         target: 'https://i.wemecity.net/',
         changeOrigin: true,
         pathRewrite: {
-          '^/': ''
+          '^/catering': '/catering'
+        }
+      },
+      '/components': {
+        target: 'https://i.wemecity.net/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/components': '/components'
+        }
+      },
+      '/place/v2/suggestion': {
+        target: 'http://api.map.baidu.com/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/place/v2/suggestion': '/place/v2/suggestion'
         }
       }
     },

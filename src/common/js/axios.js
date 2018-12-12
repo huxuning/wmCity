@@ -31,7 +31,7 @@ axios.defaults.timeout = 30 * 1000
 axios.defaults.withCredentials = true
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
 // axios.defaults.headers.post['Data-Type'] = 'json'
-axios.defaults.baseURL = 'https://i.wemecity.net'
+axios.defaults.baseURL = ''
 
 axios.interceptors.request.use((config) => {
   if (config.data && config.data.isValidateRequest) {
@@ -51,7 +51,13 @@ axios.interceptors.request.use((config) => {
 })
 
 axios.interceptors.response.use((rs) => {
-  if (rs.data.resultCode) {
+  if (rs.data.message == 'ok') {
+    return rs
+  }
+
+  if (rs.data.resultCode || rs.data.message) {
+    
+
     if (rs.data.resultCode !== 999999 && rs.data.resultCode !== '999999') {
       // 重定向登录
       // if (rs.data.resultCode === 500) {
@@ -67,6 +73,7 @@ axios.interceptors.response.use((rs) => {
       }
       return Promise.reject(rs.data.resultData)
     }
+
   } else {
     console.log('数据格式返回有误')
     return
@@ -108,11 +115,3 @@ export default function (options) {
     })
   })
 }
-
-axios(
-  {
-    url: "https://i.wemecity.net/catering/restaurant/queryRecommendRestaurantList/1", 
-    method: "post", 
-    data: {}
-  }
-)
