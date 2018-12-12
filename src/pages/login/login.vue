@@ -1,19 +1,38 @@
 <template>
-  <div @touchmove.prevent style="height:100%">
-		<v-header title="登录"  @clickBack="goback"></v-header>
+  <div @touchmove.prevent style="height: 100%;">
+    <v-header :showLeft="false" :showRight="false" title="登录"></v-header>
+    <a href="#" class="to-register-link" @click="toRegisterLink">注册</a>
     <div class="content">
-      <p class="welcome-title">欢迎登陆微米城市</p>
+      <img src="../../common/image/logo.png" alt="" class="login-img">
       <div class="login-form">
-        <input type="text" placeholder="请输入手机号码" class="phone-input">
-        <p class="phone-tip">未注册的手机号码验证后自动创建微米账户</p>
-        <button class="get-code">获取短信验证码</button>
+        <div class="form-item">
+          <i class="icon-shouji1"></i>
+          <input type="text" class="phone-input" placeholder="请输入手机号码">
+        </div>
+        <div class="form-item">
+          <i class="icon-mima"></i>
+          <input type="password" class="password-input" placeholder="请输入密码">
+        </div>
+        <div class="operate-btns">
+          <p class="wx-login">微信登录</p>
+          <p class="forget-password" @click="toForgetPasswordLink">忘记密码？</p>
+        </div>
+        <div class="login-btn-container">
+          <button class="login-btn">立即登录</button>
+        </div>
+        <div class="protocol-content" @click="protocolReaded = !protocolReaded">
+          <p class="protocol-checkbox">
+            <span v-if="protocolReaded" :style="{backgroundColor: (protocolReaded ? '#fc9027' : '#fff')}"></span>
+          </p>
+          我已阅读并同意
+          <a href="#" class="protocol-link">《微米用户服务协议》</a>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  
   import VHeader from 'components/v-header/v-header'
   export default {
     name: 'app',
@@ -22,12 +41,23 @@
     },
     data () {
       return {
-
+        protocolReaded: false
       }
     },
     methods: {
-      goback() {
-        this.$router.go(-1)
+      toRegisterLink () {
+        this.$router.push({
+					path: '/Register',
+					query: {
+					}
+				})
+      },
+      toForgetPasswordLink () {
+        this.$router.push({
+					path: '/ForgetPassword',
+					query: {
+					}
+				})
       }
     },
     mounted () {
@@ -36,53 +66,125 @@
     created () {
     },
     watch: {
-      '$route': function (to, from) {
-      }
     }
   }
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
   @import '~common/style/mixin.scss';
+  #app{
+    height: 100%;
+  }
+  .to-register-link{
+    position: absolute;
+    top: 0.3rem;
+    left: auto;
+    right: 0.3rem;
+    z-index: 10;
+    color: #fff;
+    font-size: 16px;
+  }
   .content{
-    padding: 0 0.5rem;
-    .welcome-title{
-      font-size: 18px;
-      margin-top: 2rem;
+    height: 100%;
+    background: url(../../common/image/login_bg.png) no-repeat;
+    background-size: cover;
+    text-align: center;
+    font-size: 14px;
+    .login-img{
+      width: 1.5rem;
+      margin-top: 1.5rem;
     }
     .login-form{
-      margin-top: 1rem;
-      text-align: center;
-      .phone-input{
-        width: 100%;
-        height: 0.5rem;
-        line-height: 0.5rem;
-        border: 0;
-        border-bottom: 1px solid #f3f3f3;
-        padding-left: 0.1rem;
-        outline: none;
-
+      margin-top: 0.8rem;
+      .form-item{
+        margin-bottom: 0.24rem;
+        display: inline-block;
+        position: relative;
       }
-      .phone-tip{
-        margin-top: 0.1rem;
-        padding-left: 0.1rem;
-        font-size: 12px;
-        color: #ccc;
-        text-align: left;
+      .phone-input, .password-input{
+        width: 3.91rem;
+        height: 0.6rem;
+        border-radius: 0.6rem;
+        background: #fff;
+        border: none;
+        outline: none;
+        padding-left: 0.64rem;
+      }
+      .phone-input{
+        width: 2.41rem;
+        padding-right: 1.5rem;
+      }
+      .icon-shouji1, .icon-mima{
+        position: absolute;
+        left: 0.24rem;
+        top: 0.18rem;
+        color: #666;
+        font-size: 18px;
       }
       .get-code{
-        width: 96%;
-        background: #f9ab0d;
-        border: 0;
+        position: absolute;
+        top: 0.08rem;
+        right: 0.15rem;
+        width: 1.2rem;
+        height: 0.44rem;
+        color: #fc9027;
+        border: 1px solid #fc9027;
         outline: none;
-        height: 0.8rem;
-        line-height: 0.8rem;
-        text-align: center;
-        text-align: center;
+        background: #fff;
+        border-radius: 0.44rem;
+        font-size: 12px;
+      }
+      .operate-btns{
+        display: inline-block;
+        width: 4.07rem;
+        margin-top: 0.06rem;
+        margin-bottom: 0.3rem;
+        overflow: hidden;
         color: #fff;
-        border-radius: 0.8rem;
-        margin-top: 0.8rem;
-        font-size: 14px;
+      }
+      .wx-login{
+        float: left;
+      }
+      .forget-password{
+        float: right;
+      }
+      .login-btn-container{
+        margin-bottom: 0.3rem;
+      }
+      .login-btn{
+        width: 4.55rem;
+        height: 0.6rem;
+        line-height: 0.6rem;
+        border-radius: 0.6rem;
+        color: #fff;
+        background: #fc9027;
+        border: none;
+        outline: none;
+        font-size: 16px;
+      }
+      .protocol-content{
+        color: #fff;
+      }
+      .protocol-checkbox{
+        display: inline-block;
+        width: 0.18rem;
+        height: 0.18rem;
+        border: 1px solid #d0cdcd;
+        border-radius: 0;
+        background: #fff;
+        margin-right: 0.11rem;
+        position: relative;
+        top: 0.02rem;
+        span{
+          display: inline-block;
+          width: 0.12rem;
+          height: 0.12rem;
+          position: relative;
+          top: -0.03rem;
+        }
+      }
+      .protocol-link{
+        color: #fc9027;
       }
     }
   }

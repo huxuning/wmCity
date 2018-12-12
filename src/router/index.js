@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from 'pages/login/login'  // 好吃首页
-import Register from 'pages/register/register'  // 好吃首页
+import Login from 'pages/login/login'  // 好吃登录页
+import Register from 'pages/register/register'  // 好吃注册页
+import ForgetPassword from 'pages/forgetPassword/forget-password' // 忘记密码页
 import EatHome from 'pages/eat-home/eat-home'  // 好吃首页
 import EatStoreList from 'pages/eat-store-list/eat-store-list' // 商铺列表
 import EatStoreDetail from 'pages/eat-store-detail/eat-store-detail'  // 商铺详情
@@ -102,6 +103,15 @@ export default new Router({
       meta: {
         hasNav: false,
         title: '注册'
+      }
+    },
+    {
+      path: '/forgetPassword',
+      name: 'forgetPassword',
+      component: ForgetPassword,
+      meta: {
+        hasNav: false,
+        title: '忘记密码'
       }
     },
     {
