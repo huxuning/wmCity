@@ -31,6 +31,13 @@ module.exports = {
         pathRewrite: {
           '^/place/v2/suggestion': '/place/v2/suggestion'
         }
+      },
+      '/user': {
+        target: 'https://i.wemecity.net/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/user': '/user'
+        }
       }
     },
 

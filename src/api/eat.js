@@ -151,3 +151,51 @@ export function getExchangeRate () {
     method: 'get'
   })
 }
+
+// 手机号码+密码登录
+export function doLogin (params) {
+  let data = {
+    ...params
+  }
+  return axios({
+    url: '/user/doLogin',
+    method: 'post',
+    data: data
+  })
+}
+
+// 获取短信验证码
+export function smsCode (params) {
+  let data = {
+    ...params
+  }
+  return axios({
+    url: '/user/smsCode',
+    data: data,
+    method: 'get'
+  })
+}
+
+// 手机号用户注册
+export function phoneRegister (params) {
+  let data = {
+    ...params
+  }
+  return axios({
+    url: '/user/register',
+    method: 'post',
+    data: data
+  })
+}
+
+// 忘记密码
+export function retrievePassword (params) {
+  let data = {
+    ...params
+  }
+  return axios({
+    url: '/user/retrievePassword',
+    method: 'post',
+    data: data
+  })
+}

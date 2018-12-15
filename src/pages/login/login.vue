@@ -7,22 +7,22 @@
       <div class="login-form">
         <div class="form-item">
           <i class="icon-shouji1"></i>
-          <input type="text" class="phone-input" placeholder="请输入手机号码">
+          <input type="text" class="phone-input" placeholder="请输入手机号码" v-model="loginForm.phone">
         </div>
         <div class="form-item">
           <i class="icon-mima"></i>
-          <input type="password" class="password-input" placeholder="请输入密码">
+          <input type="password" class="password-input" placeholder="请输入密码" v-model="loginForm.password">
         </div>
         <div class="operate-btns">
           <p class="wx-login">微信登录</p>
           <p class="forget-password" @click="toForgetPasswordLink">忘记密码？</p>
         </div>
         <div class="login-btn-container">
-          <button class="login-btn">立即登录</button>
+          <button class="login-btn" @click="toDoLogin">立即登录</button>
         </div>
         <div class="protocol-content" @click="protocolReaded = !protocolReaded">
           <p class="protocol-checkbox">
-            <span v-if="protocolReaded" :style="{backgroundColor: (protocolReaded ? '#fc9027' : '#fff')}"></span>
+            <span :style="{backgroundColor: (protocolReaded ? '#fc9027' : '#fff')}"></span>
           </p>
           我已阅读并同意
           <a href="#" class="protocol-link">《微米用户服务协议》</a>
@@ -34,6 +34,9 @@
 
 <script>
   import VHeader from 'components/v-header/v-header'
+  import {doLogin} from 'api/eat'
+  import Toast from 'components/toast/'
+  import {patterns, validatePassword} from 'common/js/rules'
   export default {
     name: 'app',
     components: {
@@ -41,7 +44,11 @@
     },
     data () {
       return {
-        protocolReaded: false
+        protocolReaded: false,
+        loginForm: {
+          phone: '',
+          password: ''
+        }
       }
     },
     methods: {
@@ -58,10 +65,41 @@
 					query: {
 					}
 				})
+      },
+      verifyPhone () {
+        let reg = patterns.phoneFF.pattern
+        if (this.loginForm.phone && reg.test(this.loginForm.phone)) {
+          return true
+        } else {
+          Toast.fail('请输入正确的手机号码！')
+          return false
+        }
+      },
+      toDoLogin () {
+        // 验证手机号码，测试需要登陆的时候可以先注释该行代码
+        if (!this.verifyPhone()) {
+          return
+        }
+        // 验证密码
+        if (!validatePassword(this.loginForm.password)) {
+          return
+        }
+        // 验证是否勾选
+        if (!this.protocolReaded) {
+          Toast.fail('请阅读并同意《微米用户服务协议》！')
+          return
+        }
+        let ajaxData = {
+          phone: this.loginForm.phone,
+          password: this.loginForm.password
+        }
+        doLogin(ajaxData).then(rs => {
+          Toast.success(rs.resultDesc)
+          this.$router.go(-1)
+        })
       }
     },
     mounted () {
-    
     },
     created () {
     },

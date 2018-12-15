@@ -5,19 +5,20 @@
       <div class="forget-password-form">
         <div class="form-item">
           <i class="icon-shouji1"></i>
-          <input type="text" class="phone-input" placeholder="请输入手机号码">
-          <button class="get-code">获取验证码</button>
+          <input type="text" class="phone-input" placeholder="请输入手机号码" v-model="forgetPasswordForm.phone">
+          <button class="get-code" @click="getCode" v-if="!countDowning">获取验证码</button>
+          <button class="get-code" v-if="countDowning">{{countDownTimeText ? countDownTimeText : countDownTime + 's'}}</button>
         </div>
         <div class="form-item">
           <i class="icon-mima"></i>
-          <input type="text" class="code-input" placeholder="请输入验证码">
+          <input type="text" class="code-input" placeholder="请输入验证码" v-model="forgetPasswordForm.phoneCode">
         </div>
         <div class="form-item">
           <i class="icon-mima"></i>
-          <input type="password" class="password-input" placeholder="请输入新密码（6-20位数字字母组合）">
+          <input type="password" class="password-input" placeholder="请输入新密码（6-20位数字字母组合）" v-model="forgetPasswordForm.password">
         </div>
         <div class="edit-btn-container">
-          <button class="edit-btn">修改</button>
+          <button class="edit-btn" @click="resetPassword">修改</button>
         </div>
       </div>
     </div>
@@ -26,6 +27,9 @@
 
 <script>
   import VHeader from 'components/v-header/v-header'
+  import {smsCode, retrievePassword} from 'api/eat.js'
+  import Toast from 'components/toast/'
+  import {patterns, validatePassword, validateNotNull} from 'common/js/rules'
   export default {
     name: 'app',
     components: {
@@ -33,13 +37,84 @@
     },
     data () {
       return {
-        protocolReaded: false
+        protocolReaded: false,
+        forgetPasswordForm: {
+          phone: '',
+          password: '',
+          phoneCode: ''
+        },
+        countDowning: false,
+        countDownTime: 60,
+        countDownTimeText: ''
       }
     },
     methods: {
       goback () {
 				this.$router.go(-1)
-			},
+      },
+      encryptData (data) {
+        let encrypt = new JSEncrypt()
+        encrypt.setPublicKey(window.RSAPublicKey)
+        let encryptedData = encrypt.encrypt(data)
+        return encryptedData
+      },
+      getCode () {
+        // 验证手机号码，测试需要时可以先注释该行代码
+        if (!this.verifyPhone()) {
+          return
+        }
+        let encryptPhone = this.encryptData(this.forgetPasswordForm.phone)
+        let ajaxData = {
+          phone: encryptPhone,
+          type: 'retrievePassword'
+        }
+        smsCode(ajaxData).then(rs => {
+          Toast.success(rs.resultDesc)
+
+          this.countDowning = !this.countDowning
+          let timer = setInterval(() => {
+            if (this.countDownTime === 0) {
+              this.countDowning = !this.countDowning
+              clearInterval(timer)
+              return
+            }
+            this.countDownTime--
+            this.countDownTimeText = this.countDownTime + 's'
+          }, 1000)
+        })
+      },
+      verifyPhone () {
+        let reg = patterns.phoneFF.pattern
+        if (this.forgetPasswordForm.phone && reg.test(this.forgetPasswordForm.phone)) {
+          return true
+        } else {
+          Toast.fail('请输入正确的手机号码！')
+          return false
+        }
+      },
+      resetPassword () {
+        // 验证手机号码，测试需要时可以先注释该行代码
+        if (!this.verifyPhone()) {
+          return
+        }
+        // 验证短信验证码
+        if (!validateNotNull(this.forgetPasswordForm.phoneCode)) {
+          return
+        }
+        // 验证密码
+        if (!validatePassword(this.forgetPasswordForm.password)) {
+          return
+        }
+        let ajaxData = {
+          phone: this.forgetPasswordForm.phone,
+          password: this.forgetPasswordForm.password,
+          phoneCode: this.forgetPasswordForm.phoneCode
+        }
+        retrievePassword(ajaxData).then(rs => {
+          Toast.success(rs.resultDesc)
+          this.$router.go(-1)
+        })
+      }
     },
     mounted () {
     

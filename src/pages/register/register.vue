@@ -7,27 +7,28 @@
       <div class="login-form">
         <div class="form-item">
           <i class="icon-shouji1"></i>
-          <input type="text" class="phone-input" placeholder="请输入手机号码">
-          <button class="get-code">获取验证码</button>
+          <input type="text" class="phone-input" placeholder="请输入手机号码" v-model="registerForm.phone">
+          <button class="get-code" @click="getCode" v-if="!countDowning">获取验证码</button>
+          <button class="get-code" v-if="countDowning">{{countDownTimeText ? countDownTimeText : countDownTime + 's'}}</button>
         </div>
         <div class="form-item">
           <i class="icon-mima"></i>
-          <input type="text" class="code-input" placeholder="请输入验证码">
+          <input type="text" class="code-input" placeholder="请输入验证码" v-model="registerForm.phoneCode">
         </div>
         <div class="form-item">
           <i class="icon-mima"></i>
-          <input type="password" class="password-input" placeholder="请输入密码（6-20位数字字母组合）">
+          <input type="password" class="password-input" placeholder="请输入密码（6-20位数字字母组合）" v-model="registerForm.password">
         </div>
         <div class="operate-btns">
           <p class="wx-login">微信登录</p>
           <p class="forget-password" @click="toForgetPasswordLink">忘记密码？</p>
         </div>
         <div class="register-btn-container">
-          <button class="register-btn">立即注册</button>
+          <button class="register-btn" @click="registerNow">立即注册</button>
         </div>
         <div class="protocol-content" @click="protocolReaded = !protocolReaded">
           <p class="protocol-checkbox">
-            <span v-if="protocolReaded" :style="{backgroundColor: (protocolReaded ? '#fc9027' : '#fff')}"></span>
+            <span :style="{backgroundColor: (protocolReaded ? '#fc9027' : '#fff')}"></span>
           </p>
           我已阅读并同意
           <a href="#" class="protocol-link">《微米用户服务协议》</a>
@@ -39,6 +40,9 @@
 
 <script>
   import VHeader from 'components/v-header/v-header'
+  import {smsCode, phoneRegister} from 'api/eat.js'
+  import Toast from 'components/toast/'
+  import {patterns, validatePassword, validateNotNull} from 'common/js/rules'
   export default {
     name: 'app',
     components: {
@@ -46,7 +50,17 @@
     },
     data () {
       return {
-        protocolReaded: false
+        protocolReaded: false,
+        registerForm: {
+          phone: '',
+          password: '',
+          rePassword: '',
+          phoneCode: '',
+          registerSource: 'h5_base'
+        },
+        countDowning: false,
+        countDownTime: 60,
+        countDownTimeText: ''
       }
     },
     methods: {
@@ -63,10 +77,79 @@
 					query: {
 					}
 				})
+      },
+      encryptData (data) {
+        let encrypt = new JSEncrypt()
+        encrypt.setPublicKey(window.RSAPublicKey)
+        let encryptedData = encrypt.encrypt(data)
+        return encryptedData
+      },
+      getCode () {
+        // 验证手机号码，测试需要时可以先注释该行代码
+        if (!this.verifyPhone()) {
+          return
+        }
+        let encryptPhone = this.encryptData(this.registerForm.phone)
+        let ajaxData = {
+          phone: encryptPhone,
+          type: 'register'
+        }
+        smsCode(ajaxData).then(rs => {
+          Toast.success(rs.resultDesc)
+          
+          this.countDowning = !this.countDowning
+          let timer = setInterval(() => {
+            if (this.countDownTime === 0) {
+              this.countDowning = !this.countDowning
+              clearInterval(timer)
+              return
+            }
+            this.countDownTime--
+            this.countDownTimeText = this.countDownTime + 's'
+          }, 1000)
+        })
+      },
+      verifyPhone () {
+        let reg = patterns.phoneFF.pattern
+        if (this.registerForm.phone && reg.test(this.registerForm.phone)) {
+          return true
+        } else {
+          Toast.fail('请输入正确的手机号码！')
+          return false
+        }
+      },
+      registerNow () {
+        // 验证手机号码，测试需要时可以先注释该行代码
+        if (!this.verifyPhone()) {
+          return
+        }
+        // 验证短信验证码
+        if (!validateNotNull(this.registerForm.phoneCode)) {
+          return
+        }
+        // 验证密码
+        if (!validatePassword(this.registerForm.password)) {
+          return
+        }
+        // 验证是否勾选
+        if (!this.protocolReaded) {
+          Toast.fail('请阅读并同意《微米用户服务协议》！')
+          return
+        }
+        let ajaxData = {
+          phone: this.registerForm.phone,
+          password: this.registerForm.password,
+          rePassword: this.registerForm.password,
+          phoneCode: this.registerForm.phoneCode,
+          registerSource: this.registerForm.registerSource
+        }
+        phoneRegister(ajaxData).then(rs => {
+          Toast.success(rs.resultDesc)
+          this.toLoginLink()
+        })
       }
     },
     mounted () {
-    
     },
     created () {
     },

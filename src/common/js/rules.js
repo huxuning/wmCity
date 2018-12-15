@@ -9,6 +9,10 @@ export const patterns = {
     pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/,
     message: '手机格式不正确'
   },
+  phoneFF: {
+    pattern: /^(\+?33|0)[67]\d{8}$/,
+    message: '手机格式不正确'
+  },
   code: {
     pattern: /^\d{6}(?!\d)$/,
     message: '邮编格式不正确'
@@ -41,11 +45,11 @@ function getStringLength (str) {
 
 export function validateTelRunCode (value, field = '分机号') {
   if (!value) {
-    Toast('请填写' + field)
+    Toast.fail('请填写' + field)
     return false
   }
   if (!/^\d{1,5}$/.test(value)) {
-    Toast(field + '格式有误')
+    Toast.fail(field + '格式有误')
     return false
   }
   return true
@@ -53,11 +57,11 @@ export function validateTelRunCode (value, field = '分机号') {
 
 export function validateTel (value, field = '公司电话') {
   if (!value) {
-    Toast('请填写' + field)
+    Toast.fail('请填写' + field)
     return false
   }
   if (!/^\d{7,8}$/.test(value)) {
-    Toast(field + '格式有误')
+    Toast.fail(field + '格式有误')
     return false
   }
   return true
@@ -65,11 +69,11 @@ export function validateTel (value, field = '公司电话') {
 
 export function validateCityCode (value, field = '区号') {
   if (!value) {
-    Toast('请填写' + field)
+    Toast.fail('请填写' + field)
     return false
   }
   if (!/^\d{3,4}$/.test(value)) {
-    Toast(field + '格式有误')
+    Toast.fail(field + '格式有误')
     return false
   }
   return true
@@ -77,11 +81,11 @@ export function validateCityCode (value, field = '区号') {
 
 export function validateBankAccount (value, field = '账号') {
   if (!value) {
-    Toast('请填写' + field)
+    Toast.fail('请填写' + field)
     return false
   }
   if (!/^\d{5,22}$/.test(value)) {
-    Toast(field + '必须为5-22位数字')
+    Toast.fail(field + '必须为5-22位数字')
     return false
   }
   return true
@@ -106,11 +110,11 @@ export function validateUserName (rule, value, callback) {
 
 export function validatePhone (value) {
   if (!value) {
-    Toast('请填写手机号')
+    Toast.fail('请填写手机号')
     return false
   }
   if (!/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/.test(value)) {
-    Toast('手机格式不正确')
+    Toast.fail('手机格式不正确')
     return false
   }
   return true
@@ -118,30 +122,30 @@ export function validatePhone (value) {
 
 export function validatePassword (value) {
   if (!value) {
-    Toast('请填写密码')
+    Toast.fail('请填写密码')
     return false
   }
-  if (!/.{6,18}/.test(value)) {
-    Toast('限6-18位，包含“字母、数字、符号”，其中的任意两种组合')
+  if (!/.{6,20}/.test(value)) {
+    Toast.fail('限6-20位，包含“字母、数字、符号”，其中的任意两种组合')
     return false
   }
   // 纯数字
   if (/^\d+$/.test(value)) {
-    Toast('密码不能为纯数字！')
+    Toast.fail('密码不能为纯数字！')
     return false
   }
   // 纯字母
   if (/^[a-zA-Z]+$/.test(value)) {
-    Toast('密码不能为纯字母！')
+    Toast.fail('密码不能为纯字母！')
     return false
   }
   // 纯标点符号
   if (/^[`~!@#$%^&*()\-=_+[\]\\{}|;':",./<>?]+$/.test(value)) {
-    Toast('密码不能为纯标点符号！')
+    Toast.fail('密码不能为纯标点符号！')
     return false
   }
-  if (!/^[0-9a-zA-Z`~!@#$%^&*()\-=_+[\]\\{}|;':",./<>?]{6,18}$/.test(value)) {
-    Toast('限6-18位，包含“字母、数字、符号”，其中的任意两种组合')
+  if (!/^[0-9a-zA-Z`~!@#$%^&*()\-=_+[\]\\{}|;':",./<>?]{6,20}$/.test(value)) {
+    Toast.fail('限6-20位，包含“字母、数字、符号”，其中的任意两种组合')
     return false
   }
   return true
@@ -149,7 +153,7 @@ export function validatePassword (value) {
 
 export function validateNotNull (value, field = '验证码') {
   if (!value) {
-    Toast('请填写' + field)
+    Toast.fail('请填写' + field)
     return false
   }
   return true
@@ -157,15 +161,15 @@ export function validateNotNull (value, field = '验证码') {
 
 export function validateCompanyName (value) {
   if (value === '') {
-    Toast('请填写公司名称！')
+    Toast.fail('请填写公司名称！')
     return false
   }
   if (/\s/g.test(value)) {
-    Toast('公司名4-50个字符，不能包含空格！')
+    Toast.fail('公司名4-50个字符，不能包含空格！')
     return false
   }
   if (!/^.{4,50}$/.test(value)) {
-    Toast('公司名称长度必须为4-50个字符')
+    Toast.fail('公司名称长度必须为4-50个字符')
     return false
   }
   return true
@@ -173,15 +177,15 @@ export function validateCompanyName (value) {
 
 export function validateContact (value) {
   if (value === '') {
-    Toast('请填写姓名！')
+    Toast.fail('请填写姓名！')
     return false
   }
   if (!/^([\u4E00-\u9FA5|a-zA-Z|\s|'])+$/.test(value)) {
-    Toast('姓名只能填写中文或英文！')
+    Toast.fail('姓名只能填写中文或英文！')
     return false
   }
   if (!/^.{2,20}$/.test(value)) {
-    Toast('姓名长度必须为2-20个字符')
+    Toast.fail('姓名长度必须为2-20个字符')
     return false
   }
   return true
@@ -189,11 +193,11 @@ export function validateContact (value) {
 
 export function validateEmail (value) {
   if (value === '') {
-    Toast('请填写邮箱地址！')
+    Toast.fail('请填写邮箱地址！')
     return false
   }
   if (!/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(value)) {
-    Toast('邮箱格式不正确')
+    Toast.fail('邮箱格式不正确')
     return false
   }
   return true
@@ -201,12 +205,12 @@ export function validateEmail (value) {
 
 export function validateAddress (value) {
   if (value === '') {
-    Toast('请填写详细地址！')
+    Toast.fail('请填写详细地址！')
     return false
   }
   let len = getStringLength(value)
   if (len > 100) {
-    Toast('详细地址最多填写100字符')
+    Toast.fail('详细地址最多填写100字符')
     return false
   }
   return true
@@ -218,11 +222,11 @@ export function validateUpload (file, limitTypes) {
   let isLt2M = file.size / 1024 / 1024 < 2
 
   if (limit.indexOf(type) === -1) {
-    Toast('仅支持：jpg、jpeg、png、pdf')
+    Toast.fail('仅支持：jpg、jpeg、png、pdf')
     return false
   }
   if (!isLt2M) {
-    Toast('文件大小不能超过2M')
+    Toast.fail('文件大小不能超过2M')
     return false
   }
   return true
