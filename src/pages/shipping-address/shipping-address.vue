@@ -96,6 +96,7 @@
 				</div>
 			</div>
 		</scroll>
+		<loading v-show="isLoading"></loading>
 		<popup ref="pickTime" closeOnClickMask position="bottom">
 			<div class="date-pick-container">
 				<datetime-picker></datetime-picker>
@@ -107,6 +108,7 @@
 	import VHeader from 'components/v-header/v-header'
 	import Scroll from 'components/scroll/scroll'
 	import Popup from 'components/popup/popup'
+	import Loading from 'components/loading/loading'
 	import DatetimePicker from 'components/datetime-picker/datetime-picker'
 	import {insertCateringContacts, searchHistoryContacts} from 'api/eat.js'
 	export default{
@@ -117,14 +119,16 @@
 				newContactData: {},
 				shippingTime: '',
 				historyListPageNum: 1,
-				historyListData: []
+				historyListData: [],
+				isLoading: false
 			}
 		},
 		components: {
 			VHeader,
 			Scroll,
 			Popup,
-			DatetimePicker
+			DatetimePicker,
+			Loading
 		},
 		mounted () {
 			this.getHistoryContacts()
@@ -137,18 +141,23 @@
 				this.$refs.pickTime.show()
 			},
 			submitNewContact () {
+				this.isLoading = true
 				let ajaxData = {
-					userKey: 'oGMYR0Vvcq0fg-V-KoE59ZEm671g', // 用户key先写死
+					userKey: window.localStorage.getItem('userKey'),
 					name: this.newContactData.contactName,
 					phone: this.newContactData.phone,
 					address: this.newContactData.address
 				}
 				insertCateringContacts(ajaxData).then(rs => {
+					this.isLoading = false
+					this.$router.go(-1)
+				}).then(error => {
+					this.isLoading = false
 				})
 			},
 			getHistoryContacts () {
 				let ajaxData = {
-					userKey: 'oGMYR0Vvcq0fg-V-KoE59ZEm671g', // 用户key先写死
+					userKey: window.localStorage.getItem('userKey'),
 					pageNum: this.historyListPageNum
 				}
 				searchHistoryContacts(ajaxData).then(rs => {

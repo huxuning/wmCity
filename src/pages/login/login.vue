@@ -77,9 +77,9 @@
       },
       toDoLogin () {
         // 验证手机号码，测试需要登陆的时候可以先注释该行代码
-        if (!this.verifyPhone()) {
-          return
-        }
+        // if (!this.verifyPhone()) {
+        //   return
+        // }
         // 验证密码
         if (!validatePassword(this.loginForm.password)) {
           return
@@ -95,6 +95,10 @@
         }
         doLogin(ajaxData).then(rs => {
           Toast.success(rs.resultDesc)
+          let userKey = rs.resultData.userKey
+          let createTime = rs.resultData.createTime
+          window.localStorage.setItem('userKey', userKey)
+          window.localStorage.setItem('createTime', createTime)
           this.$router.go(-1)
         })
       }

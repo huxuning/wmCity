@@ -13,7 +13,7 @@ import Demo from 'pages/demo/demo'
 import map from 'pages/map/map'
 Vue.use(Router)
 
-export default new Router({
+let router = new Router({
   routes: [
     {
       path: '/demo',
@@ -125,13 +125,21 @@ export default new Router({
     }
   ]
 })
-// router.beforeEach((to, from, next) => {
-//   if (to.meta.needLogin && authCode === null) {
-//     next({
-//       name: 'login',
-//       params: {redirect: to.path}
-//     })
-//   } else {
-//     next()
-//   }
-// })
+
+router.beforeEach((to, from, next) => {
+  let userKey = window.localStorage.getItem('userKey')
+  let createTime = window.localStorage.getItem('createTime')
+  let createTimestamp = Date.parse(createTime)
+  let currentTimestamp = Date.parse(new Date())
+  let fifteenDayTimestamp = 15 * 24 * 60 * 60 * 1000
+  let timeDiff = currentTimestamp - createTimestamp
+  if (to.meta.needLogin && (!userKey || (timeDiff > fifteenDayTimestamp))) {
+    next({
+      name: 'login',
+      params: {redirect: to.path}
+    })
+  } else {
+    next()
+  }
+})
+export default router

@@ -145,7 +145,11 @@
         }
         phoneRegister(ajaxData).then(rs => {
           Toast.success(rs.resultDesc)
-          this.toLoginLink()
+          let userKey = rs.resultData.userKey
+          let createTime = rs.resultData.createTime
+          window.localStorage.setItem('userKey', userKey)
+          window.localStorage.setItem('createTime', createTime)
+          this.$router.go(-1)
         })
       }
     },
