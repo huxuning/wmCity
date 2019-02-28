@@ -66,7 +66,7 @@ export default {
 		}
 	},
 	mounted () {
-		this.getPosition()
+		// this.getPosition()
 		this.getBaseCategoryList()
 		this.getBaseRestaurantList()
 		// this.getCateringRecommendList()
