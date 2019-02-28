@@ -3,7 +3,7 @@
 		<v-header :showLeft="true" :showRight="true" title="位置"></v-header>
 		<div class="map-content-wrap">
 			<div class="search" @click="search">
-				<input type="text">
+				<input type="text" class="searchInput">
 			</div>
 			<div id="mapContent"></div>
 
@@ -57,5 +57,11 @@ import VHeader from 'components/v-header/v-header'
 		height: 100%;
 		// margin-top: .86rem;
 		// overflow: hidden;
+		
+	}
+	.search{
+		.searchInput{
+			// width:
+		}
 	}
 </style>
