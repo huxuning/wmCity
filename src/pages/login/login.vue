@@ -99,6 +99,7 @@
           let createTime = rs.resultData.createTime
           window.localStorage.setItem('userKey', userKey)
           window.localStorage.setItem('createTime', createTime)
+          console.log(this.$router)
           this.$router.go(-1)
         })
       }

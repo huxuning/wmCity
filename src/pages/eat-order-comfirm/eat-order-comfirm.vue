@@ -35,7 +35,7 @@
 								<span>收货人</span>
 							</div>
 							<div class="form-content">
-								<input type="text" placeholder="请输入收货人">
+								<input v-model="selfDeliveryData.name" type="text" placeholder="请输入收货人">
 							</div>
 						</div>
 						<div class="address-form-item">
@@ -44,7 +44,7 @@
 								<span>手机号</span>
 							</div>
 							<div class="form-content">
-								<input type="text" placeholder="请输入手机号">
+								<input v-model="selfDeliveryData.phone" type="text" placeholder="请输入手机号">
 							</div>
 						</div>
 						<div class="address-form-item" v-if="activeRadioNum === 1">
@@ -53,7 +53,7 @@
 								<span>配送时间</span>
 							</div>
 							<div class="form-content">
-								<input readonly type="text" v-model="peisongTime" placeholder="点击选择配送时间" class="address-input" @click="showTimePick">
+								<input readonly type="text" v-model="selfDeliveryData.peisongTime" placeholder="点击选择配送时间" class="address-input" @click="showTimePick">
 							</div>
 						</div>
 
@@ -77,7 +77,7 @@
 					</div>
 					<div class="order-item">
 						<label for="">配送费</label>
-						<span class="item-right">€0</span>
+						<span class="item-right">€{{peisongfei}}</span>
 					</div>
 					<div class="order-item">
 						<label for="">红包</label>
@@ -97,7 +97,7 @@
 		</scroll>
 		<div class="footer-btn">
 			<span class="pay-left">现金支付</span>
-			<span class="pay-right">在线支付</span>
+			<span class="pay-right" @click="orderpayHandle">在线支付</span>
 		</div>
 		<popup ref="pickTime" closeOnClickMask position="bottom">
 			<datetime-picker :minDate="new Date()" class="date-pick-container" @confirm="dateConfirm"></datetime-picker>
@@ -108,37 +108,65 @@
 <script>
 import Scroll from 'components/scroll/scroll'
 import VHeader from 'components/v-header/v-header'
-import {restaurantInfo, getExchangeRate} from 'api/eat.js'
+import {restaurantInfo, queryDefaultCateringContacts} from 'api/eat.js'
+import {getExchangeRate, orderpay} from 'api/common.js'
 import util from 'common/js/util.js'
 import dateFormat from 'common/js/dateFormat.js'
 import Popup from 'components/popup/popup'
 import DatetimePicker from 'components/datetime-picker/datetime-picker'
 import { formatDate } from '../../common/js/dateFormat';
+import defaultImg from '../../common/image/default.png';
 export default {
 	data(){
 		return {
 			activeRadioNum: 0,
 			shopInfo: {},
 			contact: {
-				name: '测试',
-				phone: '18888888888',
+				name: '',
+				phone: '',
 				cityCode: '',
 				cityName: '',
 				districtCode: '',
 				districtName: '',
-				address: '测试地址',
+				address: '',
 				longitude: '',
 				latitude: '',
 				takeTime: ''
 			},
-			peisongTime: '',
+			selfDeliveryData: {
+				name: '',
+				phone: '',
+				takeTime: '',
+				peisongTime: '',
+			},
 			chooseGoods: [],
 			chooseGoodsNumber: [],
-			changeRate: ''
+			changeRate: '',
+			peisongfei: 5,
+			defaultAddressId: '',
+			orderpayData: {
+				contactsId: '',
+				locationId: '',
+				longitude: '',
+				latitude: '',
+				isSelfDelivery: 'Y',
+				takeTime: '',
+				name:'',
+				phone:'',
+				restaurantId:'',
+				userKey:'',
+				payType:'',
+				goodsIdStr:'',
+				couponId:'',
+				countStr:'',
+				remark:'',
+				distributionNotes:'',
+				orderSource: 'h5'
+			}
 		}
 	},
 	beforeRouteEnter (to, from, next) {
-		if (from.name != 'ShippingAddress') {
+		if (from.name != 'ShippingAddress' && from.name != 'login') {
 			next(vm=>{
 				vm.init()
 			})
@@ -147,7 +175,7 @@ export default {
 		}
 	},
 	mounted(){
-		
+		this.getDefaultAdress()		
 	},
 	components: {
 		Scroll,
@@ -177,7 +205,7 @@ export default {
 				let num = util.numMulti(this.chooseGoods[i].discountPrice, this.chooseGoodsNumber[i])
 				total = util.numAdd(total, num)
 			}
-			return total
+			return total + Number(this.peisongfei)
 		},
 		showTimePick () {
 			this.$refs.pickTime.show()
@@ -189,24 +217,66 @@ export default {
 				this.shopInfo.notice = rs.resultData.notice.replace(/[\n]/g, '<br/>')
 			})
 		},
+		getDefaultAdress () {
+			queryDefaultCateringContacts().then(rs=>{
+				let address = rs.resultData
+				// this.contact.name = address.name
+				this.contact.name = address.name
+				this.contact.phone = address.phone
+				this.contact.address = address.address
+				this.contact.latitude = address.latitude
+				this.contact.longitude = address.longitude
+				this.orderpayData.contactsId = rs.resultData.id
+				this.defaultAddressId = rs.resultData.id
+			})
+		},
 		getExchangeRate () {
 			getExchangeRate().then(rs=>{
 				this.changeRate = rs.resultData.euros
 			})
 		},
 		dateConfirm(val) {
-			this.contact.takeTime = val
+			this.selfDeliveryData.takeTime = val
 			console.log(formatDate(val, 'yyyy-MM-dd hh:mm:ss'))
-			this.peisongTime = formatDate(val, 'yyyy-MM-dd hh:mm:ss')
+			this.selfDeliveryData.peisongTime = formatDate(val, 'yyyy-MM-dd hh:mm:ss')
 		},
 		goGetContact () {
 			this.$router.push({
 				name: 'ShippingAddress'
 			})
+		},
+		orderpayHandle () {
+			orderpay().then(rs=>{
+				console.log(rs)
+			})
 		}
 	},
 	watch: {
+    activeRadioNum: function (val) {
+			if (val === 0) {
+				this.peisongfei = 5
+				this.orderpayData.isSelfDelivery = 'N'
+				this.orderpay.contactsId= this.defaultAddressId
+				this.orderpay.locationId= ''
+				this.orderpay.longitude= this.contact.longitude
+				this.orderpay.latitude= this.contact.latitude
 
+				this.orderpay.takeTime = ''
+				this.orderpay.name = ''
+				this.orderpay.phone = ''
+			} else {
+				this.peisongfei = 0
+				this.orderpayData.isSelfDelivery = 'Y'
+				this.orderpay.contactsId=''
+				this.orderpay.locationId=''
+				this.orderpay.longitude=''
+				this.orderpay.latitude=''
+
+				this.orderpay.takeTime = this.selfDeliveryData.takeTime
+				this.orderpay.name = this.selfDeliveryData.name
+				this.orderpay.phone = this.selfDeliveryData.phone
+			}
+		}
 	}
 }
 
@@ -259,7 +329,7 @@ export default {
 		.order-top-bg{
 			background: url('../../common/image/bg-1.png') -10px 0;	
 			height:9px;
-			widht: 100%;
+			width: 100%;
 		}
 	}
 	.peisong{

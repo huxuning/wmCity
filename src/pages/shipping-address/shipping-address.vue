@@ -54,10 +54,10 @@
 							<span>收货地址</span>
 						</div>
 						<div class="form-content">
-							<input type="text" placeholder="请输入地址或点击右侧图标选择地址" class="address-input" v-model="newContactData.address">
-							<span class="position-btn">
+							<input type="text" placeholder="请输入地址" class="address-input" v-model="newContactData.address">
+							<!-- <span class="position-btn">
 								<i class="icon-dangqian"></i>
-							</span>
+							</span> -->
 						</div>
 					</div>
 					<div class="address-form-item" v-if="activeRadioNum === 1">
@@ -163,6 +163,14 @@
 				searchHistoryContacts(ajaxData).then(rs => {
 					if (rs) {
 						this.historyListData = rs.resultData
+						if (this.historyListData.length) {
+							let address = this.historyListData[0]
+							this.newContactData = {
+								contactName:address.name,
+								phone:address.phone,
+								address:address.address
+							}
+						}
 					}
 				})
 			}

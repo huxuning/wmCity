@@ -60,9 +60,9 @@
       },
       getCode () {
         // 验证手机号码，测试需要时可以先注释该行代码
-        if (!this.verifyPhone()) {
-          return
-        }
+        // if (!this.verifyPhone()) {
+        //   return
+        // }
         let encryptPhone = this.encryptData(this.forgetPasswordForm.phone)
         let ajaxData = {
           phone: encryptPhone,
@@ -94,9 +94,9 @@
       },
       resetPassword () {
         // 验证手机号码，测试需要时可以先注释该行代码
-        if (!this.verifyPhone()) {
-          return
-        }
+        // if (!this.verifyPhone()) {
+        //   return
+        // }
         // 验证短信验证码
         if (!validateNotNull(this.forgetPasswordForm.phoneCode)) {
           return

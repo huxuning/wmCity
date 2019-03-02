@@ -60,7 +60,6 @@ export function baseRestaurantList (params = {}) {
 
 //获取商户列表
 export function restaurantList (params = {}) {
-  console.log(params)
   let data = {
     ...params
   }
@@ -73,7 +72,6 @@ export function restaurantList (params = {}) {
 
 //获取商户信息
 export function restaurantInfo (params) {
-  console.log(params)
   return axios({
     url: '/catering/restaurant/readCateringRestaurant/'+params.id,
     method: 'get'
@@ -135,19 +133,17 @@ export function searchHistoryContacts (params) {
     method: 'get'
   })
 }
-
+// 读取用户默认收货人信息
+export function queryDefaultCateringContacts () {
+  return axios({
+    url: '/catering/contacts/queryDefaultCateringContacts/' + window.localStorage.getItem('userKey'),
+    method: 'get'
+  })
+}
 //店铺活动获取
 export function queryDiscountList (params) {
   return axios({
     url: '/catering/discount/queryDiscountList/'+ params.id,
-    method: 'get'
-  })
-}
-
-//获取汇率 
-export function getExchangeRate () {
-  return axios({
-    url: '/components/exchangeRate/getExchangeRate',
     method: 'get'
   })
 }

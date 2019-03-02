@@ -86,9 +86,9 @@
       },
       getCode () {
         // 验证手机号码，测试需要时可以先注释该行代码
-        if (!this.verifyPhone()) {
-          return
-        }
+        // if (!this.verifyPhone()) {
+        //   return
+        // }
         let encryptPhone = this.encryptData(this.registerForm.phone)
         let ajaxData = {
           phone: encryptPhone,
@@ -120,9 +120,9 @@
       },
       registerNow () {
         // 验证手机号码，测试需要时可以先注释该行代码
-        if (!this.verifyPhone()) {
-          return
-        }
+        // if (!this.verifyPhone()) {
+        //   return
+        // }
         // 验证短信验证码
         if (!validateNotNull(this.registerForm.phoneCode)) {
           return

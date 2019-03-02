@@ -133,11 +133,15 @@ router.beforeEach((to, from, next) => {
   let currentTimestamp = Date.parse(new Date())
   let fifteenDayTimestamp = 15 * 24 * 60 * 60 * 1000
   let timeDiff = currentTimestamp - createTimestamp
-  if (to.meta.needLogin && (!userKey || (timeDiff > fifteenDayTimestamp))) {
-    next({
-      name: 'login',
-      params: {redirect: to.path}
-    })
+  console.log(to.name)
+  if(to.name == 'login') {
+    next()
+  }
+  console.log(createTimestamp)
+  if (to.meta.needLogin && !userKey) {
+    if (!createTime || timeDiff > fifteenDayTimestamp) {
+      next('/login')
+    }
   } else {
     next()
   }
