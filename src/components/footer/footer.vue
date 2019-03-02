@@ -1,10 +1,10 @@
 <template>
   <div class="root-footer">
-      <div @click="goIndex('login')" :class="{active: active == 0}">
+      <div :class="{active: active == 0}">
         <i class="icon-fangzidichan"></i>
         <span>租房</span>
       </div>
-      <div @click="goIndex('login')" :class="{active: active == 1}">
+      <div :class="{active: active == 1}">
         <i class="icon-xuesheng"></i>
         <span>留学</span>
       </div>
@@ -12,7 +12,7 @@
         <i class="icon-caipin-"></i>
         <span>好吃</span>
       </div>
-      <div @click="goIndex('login')" :class="{active: active == 3}">
+      <div :class="{active: active == 3}">
         <i class="icon-zhanshiwenzhang"></i>
         <p>视野</p>
       </div>

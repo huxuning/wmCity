@@ -128,7 +128,7 @@ export default {
 		}
 	},
 	beforeRouteEnter (to, from, next) {
-		if (from.name != 'EatOrderComfirm' && from.name != 'login') {
+		if (from.name != 'EatOrderComfirm' && from.name != 'login' && from.name != 'register') {
 			next(vm=>{
 				vm.init()
 			})

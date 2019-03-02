@@ -165,8 +165,8 @@ export default {
 			}
 		}
 	},
-	beforeRouteEnter (to, from, next) {
-		if (from.name != 'ShippingAddress' && from.name != 'login') {
+	beforeRouteEnter (to, from, next) { 
+		if (from.name != 'ShippingAddress' && from.name != 'login' && from.name != 'register') {
 			next(vm=>{
 				vm.init()
 			})
