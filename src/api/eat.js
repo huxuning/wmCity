@@ -195,3 +195,11 @@ export function retrievePassword (params) {
     data: data
   })
 }
+
+// 删除收货地址
+export function deleteCateringContacts (params) {
+  return axios({
+    url: '/catering/contacts/deleteCateringContacts/' + params.userKey + '/' + params.id,
+    method: 'post'
+  })
+}
