@@ -7,10 +7,20 @@
       <div class="login-form">
         <div class="form-item">
           <i class="icon-shouji1"></i>
+          <span class="phone-code" @click="showAreaList">+{{currentPhoneCode}}</span>
           <input type="text" class="phone-input" placeholder="请输入手机号码" v-model="registerForm.phone">
           <button class="get-code" @click="getCode" v-if="!countDowning">获取验证码</button>
           <button class="get-code" v-if="countDowning">{{countDownTimeText ? countDownTimeText : countDownTime + 's'}}</button>
         </div>
+        <popup ref="areaList" position="bottom" closeOnClickMask>
+          <div class="area-list">
+            <scroll class="area-list-scroll" :data="areaList">
+              <ul>
+                <li v-for="(item, index) in areaList" :key="index" @click="getAreaData(item)">{{item.name}}</li>
+              </ul>
+            </scroll>
+          </div>
+        </popup>
         <div class="form-item">
           <i class="icon-mima"></i>
           <input type="text" class="code-input" placeholder="请输入验证码" v-model="registerForm.phoneCode">
@@ -24,7 +34,7 @@
           <p class="forget-password" @click="toForgetPasswordLink">忘记密码？</p>
         </div>
         <div class="register-btn-container">
-          <button class="register-btn" @click="registerNow">立即注册</button>
+          <button class="register-btn" @click="registerNow">注册并登陆</button>
         </div>
         <div class="protocol-content" @click="protocolReaded = !protocolReaded">
           <p class="protocol-checkbox">
@@ -40,13 +50,18 @@
 
 <script>
   import VHeader from 'components/v-header/v-header'
-  import {smsCode, phoneRegister} from 'api/eat.js'
+  import Scroll from 'components/scroll/scroll'
+  import Popup from 'components/popup/popup'
+  import {smsCode, phoneRegister} from 'api/eat'
+  import {getBaiduLocation} from 'api/common'
   import Toast from 'components/toast/'
   import {patterns, validatePassword, validateNotNull} from 'common/js/rules'
   export default {
     name: 'app',
     components: {
-      VHeader
+      VHeader,
+      Scroll,
+      Popup
     },
     data () {
       return {
@@ -60,7 +75,9 @@
         },
         countDowning: false,
         countDownTime: 60,
-        countDownTimeText: ''
+        countDownTimeText: '',
+        areaList: [],
+        currentPhoneCode: ''
       }
     },
     methods: {
@@ -89,7 +106,7 @@
         // if (!this.verifyPhone()) {
         //   return
         // }
-        let encryptPhone = this.encryptData(this.registerForm.phone)
+        let encryptPhone = this.encryptData('+' + this.currentPhoneCode + this.registerForm.phone)
         let ajaxData = {
           phone: encryptPhone,
           type: 'register'
@@ -137,7 +154,7 @@
           return
         }
         let ajaxData = {
-          phone: this.registerForm.phone,
+          phone: '+' + this.currentPhoneCode + this.registerForm.phone,
           password: this.registerForm.password,
           rePassword: this.registerForm.password,
           phoneCode: this.registerForm.phoneCode,
@@ -149,11 +166,24 @@
           let createTime = rs.resultData.createTime
           window.localStorage.setItem('userKey', userKey)
           window.localStorage.setItem('createTime', createTime)
-          this.$router.go(-1)
+          this.$router.go(-2)
         })
+      },
+      getPhoneCode () {
+        getBaiduLocation().then(rs => {
+          this.areaList = rs.resultData
+          this.currentPhoneCode = this.areaList[0].code
+        })
+      },
+      showAreaList () {
+        this.$refs.areaList.show()
+      },
+      getAreaData (data) {
+        this.currentPhoneCode = data.code
       }
     },
     mounted () {
+      this.getPhoneCode()
     },
     created () {
     },
@@ -193,6 +223,38 @@
         display: inline-block;
         position: relative;
       }
+      .area-list {
+        background: #efefef;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 40%;
+      }
+      .area-list li {
+        height: 0.5rem;
+        line-height: 0.5rem;
+        text-align: center;
+      }
+      .area-list-scroll {
+        position: absolute;
+        top: 0.7rem;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        overflow: hidden;
+      }
+      .phone-code {
+        position: absolute;
+        left: 0.55rem;
+        top: 0;
+        display: inline-block;
+        height: 0.6rem;
+        line-height: 0.6rem;
+        padding-right: 0.15rem;
+        border-right: 1px solid #d0cdcd;
+        font-size: 14px;
+        color: #000;
+      }
       .phone-input, .password-input, .code-input{
         width: 3.91rem;
         height: 0.6rem;
@@ -203,13 +265,13 @@
         padding-left: 0.64rem;
       }
       .phone-input{
-        width: 2.41rem;
-        padding-right: 1.5rem;
+        width: 1.65rem;
+        padding: 0 1.5rem 0 1.4rem;
       }
       .icon-shouji1, .icon-mima{
         position: absolute;
         left: 0.24rem;
-        top: 0.18rem;
+        top: 0.16rem;
         color: #666;
         font-size: 18px;
       }

@@ -5,10 +5,20 @@
       <div class="forget-password-form">
         <div class="form-item">
           <i class="icon-shouji1"></i>
+          <span class="phone-code" @click="showAreaList">+{{currentPhoneCode}}</span>
           <input type="text" class="phone-input" placeholder="请输入手机号码" v-model="forgetPasswordForm.phone">
           <button class="get-code" @click="getCode" v-if="!countDowning">获取验证码</button>
           <button class="get-code" v-if="countDowning">{{countDownTimeText ? countDownTimeText : countDownTime + 's'}}</button>
         </div>
+        <popup ref="areaList" position="bottom" closeOnClickMask>
+          <div class="area-list">
+            <scroll class="area-list-scroll" :data="areaList">
+              <ul>
+                <li v-for="(item, index) in areaList" :key="index" @click="getAreaData(item)">{{item.name}}</li>
+              </ul>
+            </scroll>
+          </div>
+        </popup>
         <div class="form-item">
           <i class="icon-mima"></i>
           <input type="text" class="code-input" placeholder="请输入验证码" v-model="forgetPasswordForm.phoneCode">
@@ -27,13 +37,18 @@
 
 <script>
   import VHeader from 'components/v-header/v-header'
-  import {smsCode, retrievePassword} from 'api/eat.js'
+  import Scroll from 'components/scroll/scroll'
+  import Popup from 'components/popup/popup'
+  import {smsCode, retrievePassword} from 'api/eat'
+  import {getBaiduLocation} from 'api/common'
   import Toast from 'components/toast/'
   import {patterns, validatePassword, validateNotNull} from 'common/js/rules'
   export default {
     name: 'app',
     components: {
-      VHeader
+      VHeader,
+      Scroll,
+      Popup
     },
     data () {
       return {
@@ -45,7 +60,9 @@
         },
         countDowning: false,
         countDownTime: 60,
-        countDownTimeText: ''
+        countDownTimeText: '',
+        areaList: [],
+        currentPhoneCode: ''
       }
     },
     methods: {
@@ -63,7 +80,7 @@
         // if (!this.verifyPhone()) {
         //   return
         // }
-        let encryptPhone = this.encryptData(this.forgetPasswordForm.phone)
+        let encryptPhone = this.encryptData('+' + this.currentPhoneCode + this.forgetPasswordForm.phone)
         let ajaxData = {
           phone: encryptPhone,
           type: 'retrievePassword'
@@ -106,7 +123,7 @@
           return
         }
         let ajaxData = {
-          phone: this.forgetPasswordForm.phone,
+          phone: '+' + this.currentPhoneCode + this.forgetPasswordForm.phone,
           password: this.forgetPasswordForm.password,
           phoneCode: this.forgetPasswordForm.phoneCode
         }
@@ -114,10 +131,22 @@
           Toast.success(rs.resultDesc)
           this.$router.go(-1)
         })
+      },
+      getPhoneCode () {
+        getBaiduLocation().then(rs => {
+          this.areaList = rs.resultData
+          this.currentPhoneCode = this.areaList[0].code
+        })
+      },
+      showAreaList () {
+        this.$refs.areaList.show()
+      },
+      getAreaData (data) {
+        this.currentPhoneCode = data.code
       }
     },
     mounted () {
-    
+      this.getPhoneCode()
     },
     created () {
     },
@@ -139,6 +168,35 @@
         line-height: 0.74rem;
         @include border-retina($color-border-d, bottom);
       }
+      .area-list {
+        background: #efefef;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 40%;
+      }
+      .area-list li {
+        height: 0.5rem;
+        line-height: 0.5rem;
+        text-align: center;
+      }
+      .area-list-scroll {
+        position: absolute;
+        top: 0.7rem;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        overflow: hidden;
+      }
+      .phone-code {
+        display: inline-block;
+        height: 0.44rem;
+        line-height: 0.44rem;
+        padding-right: 0.15rem;
+        font-size: 14px;
+        color: #000;
+        border-right: 1px solid #ccc;
+      }
       .icon-shouji1, .icon-mima{
         color: #666;
         margin-left: 0.18rem;
@@ -149,6 +207,10 @@
         border: none;
         outline: none;
         width: 3.5rem;
+      }
+      .phone-input {
+        padding-left: 0.1rem;
+        width: 2.65rem;
       }
       .get-code{
         width: 1.54rem;

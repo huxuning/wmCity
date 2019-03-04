@@ -143,8 +143,9 @@ router.beforeEach((to, from, next) => {
   let fifteenDayTimestamp = 15 * 24 * 60 * 60 * 1000
   let timeDiff = currentTimestamp - createTimestamp
   console.log(to.name)
-  if(to.name == 'login') {
+  if(to.name == 'login' || to.name == 'register') {
     next()
+    return
   }
   console.log(createTimestamp)
   if (to.meta.needLogin && !userKey) {

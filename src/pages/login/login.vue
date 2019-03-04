@@ -7,8 +7,18 @@
       <div class="login-form">
         <div class="form-item">
           <i class="icon-shouji1"></i>
+          <span class="phone-code" @click="showAreaList">+{{currentPhoneCode}}</span>
           <input type="text" class="phone-input" placeholder="请输入手机号码" v-model="loginForm.phone">
         </div>
+        <popup ref="areaList" position="bottom" closeOnClickMask>
+          <div class="area-list">
+            <scroll class="area-list-scroll" :data="areaList">
+              <ul>
+                <li v-for="(item, index) in areaList" :key="index" @click="getAreaData(item)">{{item.name}}</li>
+              </ul>
+            </scroll>
+          </div>
+        </popup>
         <div class="form-item">
           <i class="icon-mima"></i>
           <input type="password" class="password-input" placeholder="请输入密码" v-model="loginForm.password">
@@ -34,13 +44,18 @@
 
 <script>
   import VHeader from 'components/v-header/v-header'
+  import Scroll from 'components/scroll/scroll'
+  import Popup from 'components/popup/popup'
   import {doLogin} from 'api/eat'
+  import {getBaiduLocation} from 'api/common.js'
   import Toast from 'components/toast/'
   import {patterns, validatePassword} from 'common/js/rules'
   export default {
     name: 'app',
     components: {
-      VHeader
+      VHeader,
+      Scroll,
+      Popup
     },
     data () {
       return {
@@ -48,7 +63,9 @@
         loginForm: {
           phone: '',
           password: ''
-        }
+        },
+        areaList: [],
+        currentPhoneCode: ''
       }
     },
     methods: {
@@ -90,7 +107,7 @@
           return
         }
         let ajaxData = {
-          phone: this.loginForm.phone,
+          phone: '+' + this.currentPhoneCode + this.loginForm.phone,
           password: this.loginForm.password
         }
         doLogin(ajaxData).then(rs => {
@@ -102,9 +119,22 @@
           console.log(this.$router)
           this.$router.go(-1)
         })
+      },
+      getPhoneCode () {
+        getBaiduLocation().then(rs => {
+          this.areaList = rs.resultData
+          this.currentPhoneCode = this.areaList[0].code
+        })
+      },
+      showAreaList () {
+        this.$refs.areaList.show()
+      },
+      getAreaData (data) {
+        this.currentPhoneCode = data.code
       }
     },
     mounted () {
+      this.getPhoneCode()
     },
     created () {
     },
@@ -144,6 +174,38 @@
         display: inline-block;
         position: relative;
       }
+      .area-list {
+        background: #efefef;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 40%;
+      }
+      .area-list li {
+        height: 0.5rem;
+        line-height: 0.5rem;
+        text-align: center;
+      }
+      .area-list-scroll {
+        position: absolute;
+        top: 0.7rem;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        overflow: hidden;
+      }
+      .phone-code {
+        position: absolute;
+        left: 0.55rem;
+        top: 0;
+        display: inline-block;
+        height: 0.6rem;
+        line-height: 0.6rem;
+        padding-right: 0.15rem;
+        border-right: 1px solid #d0cdcd;
+        font-size: 14px;
+        color: #000;
+      }
       .phone-input, .password-input{
         width: 3.91rem;
         height: 0.6rem;
@@ -154,13 +216,13 @@
         padding-left: 0.64rem;
       }
       .phone-input{
-        width: 2.41rem;
-        padding-right: 1.5rem;
+        width: 1.65rem;
+        padding: 0 1.5rem 0 1.4rem;
       }
       .icon-shouji1, .icon-mima{
         position: absolute;
         left: 0.24rem;
-        top: 0.18rem;
+        top: 0.15rem;
         color: #666;
         font-size: 18px;
       }
