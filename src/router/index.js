@@ -9,6 +9,7 @@ import EatStoreDetail from 'pages/eat-store-detail/eat-store-detail'  // 商铺�
 import EatOrderComfirm from 'pages/eat-order-comfirm/eat-order-comfirm'  // 商铺详情
 import ShippingAddress from 'pages/shipping-address/shipping-address' // 配送地址页
 import PersonCenter from 'pages/person-center/person-center' // 个人中心
+import Success from 'pages/success/success' // 提交成功页面
 import Demo from 'pages/demo/demo'
 import map from 'pages/map/map'
 Vue.use(Router)
@@ -85,6 +86,14 @@ let router = new Router({
         title: '个人中心',
         needFooter: true,
         footIndex: 4
+      }
+    },
+    {
+      path: '/Success',
+      name: 'Success',
+      component: Success,
+      meta: {
+        title: '订单成功'
       }
     },
     {

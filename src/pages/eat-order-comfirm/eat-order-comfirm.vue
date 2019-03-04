@@ -79,16 +79,16 @@
 						<label for="">配送费</label>
 						<span class="item-right">€{{peisongfei}}</span>
 					</div>
-					<div class="order-item">
+					<!-- <div class="order-item">
 						<label for="">红包</label>
 						<span class="item-right">€0</span>
-					</div>
+					</div> -->
 					<div class="order-item">
 						<label for="">小计</label>
 						<span class="item-right" style="color:#ffad41">€{{totalPrice()}}</span>
 					</div>
 					<div class="mark">
-						<input type="text" placeholder="备注">
+						<input type="text" v-model="orderpayData.remark"  placeholder="备注">
 					</div>
 				</div>
 
@@ -96,8 +96,8 @@
 			</div>
 		</scroll>
 		<div class="footer-btn">
-			<span class="pay-left">现金支付</span>
-			<span class="pay-right" @click="orderpayHandle">在线支付</span>
+			<span class="pay-left" @click="orderpayHandle('offLine')">现金支付</span>
+			<span class="pay-right">在线支付</span>
 		</div>
 		<popup ref="pickTime" closeOnClickMask position="bottom">
 			<datetime-picker :minDate="new Date()" class="date-pick-container" @confirm="dateConfirm"></datetime-picker>
@@ -145,22 +145,22 @@ export default {
 			peisongfei: 5,
 			defaultAddressId: '',
 			orderpayData: {
-				contactsId: '',
-				locationId: '',
-				longitude: '',
-				latitude: '',
+				contactsId: null,
+				locationId: null,
+				longitude: 0,
+				latitude: 0,
 				isSelfDelivery: 'Y',
-				takeTime: '',
-				name:'',
-				phone:'',
-				restaurantId:'',
-				userKey:'',
-				payType:'',
-				goodsIdStr:'',
-				couponId:'',
-				countStr:'',
-				remark:'',
-				distributionNotes:'',
+				takeTime: null,
+				name:null,
+				phone:null,
+				restaurantId:null,
+				userKey:null,
+				payType:null,
+				goodsIdStr:null,
+				couponId:null,
+				countStr:null,
+				remark:null,
+				distributionNotes:null,
 				orderSource: 'h5'
 			}
 		}
@@ -245,8 +245,19 @@ export default {
 				name: 'ShippingAddress'
 			})
 		},
-		orderpayHandle () {
-			orderpay().then(rs=>{
+		orderpayHandle (payType) {
+			this.orderpayData.restaurantId = this.$route.params.shopId
+			this.orderpayData.userKey = window.localStorage.getItem('userKey')
+			this.orderpayData.payType = payType
+
+			let goodsIdStr = []
+			this.chooseGoods.forEach((item)=>{
+				goodsIdStr.push(item.id)
+			})
+			this.orderpayData.goodsIdStr = goodsIdStr.join(',')
+
+			this.orderpayData.countStr = this.chooseGoodsNumber.join(',')
+			orderpay(this.orderpayData).then(rs=>{
 				console.log(rs)
 			})
 		}
@@ -257,20 +268,20 @@ export default {
 				this.peisongfei = 5
 				this.orderpayData.isSelfDelivery = 'N'
 				this.orderpay.contactsId= this.defaultAddressId
-				this.orderpay.locationId= ''
+				this.orderpay.locationId= null
 				this.orderpay.longitude= this.contact.longitude
 				this.orderpay.latitude= this.contact.latitude
 
-				this.orderpay.takeTime = ''
-				this.orderpay.name = ''
-				this.orderpay.phone = ''
+				this.orderpay.takeTime = null
+				this.orderpay.name = null
+				this.orderpay.phone = null
 			} else {
 				this.peisongfei = 0
 				this.orderpayData.isSelfDelivery = 'Y'
-				this.orderpay.contactsId=''
-				this.orderpay.locationId=''
-				this.orderpay.longitude=''
-				this.orderpay.latitude=''
+				this.orderpay.contactsId=null
+				this.orderpay.locationId=null
+				this.orderpay.longitude=null
+				this.orderpay.latitude=null
 
 				this.orderpay.takeTime = this.selfDeliveryData.takeTime
 				this.orderpay.name = this.selfDeliveryData.name
