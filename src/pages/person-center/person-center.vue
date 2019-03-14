@@ -20,7 +20,7 @@
 					<p class="menu-name">租房订单</p>
 					<i class="icon-xiangzuo"></i>
 				</div>
-				<div class="menu-item">
+				<div class="menu-item" @click="goIndex('EatOrderList')">
 					<i class="icon-feiji left-icon"></i>
 					<p class="menu-name">外卖订单</p>
 					<i class="icon-xiangzuo"></i>
@@ -52,6 +52,11 @@
 
 		},
 		methods: {
+			goIndex(name) {
+        this.$router.push({
+          name: name
+        })
+      }
 		}
 	}
 </script>

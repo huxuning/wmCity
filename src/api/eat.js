@@ -203,3 +203,11 @@ export function deleteCateringContacts (params) {
     method: 'post'
   })
 }
+
+// 获取用户好吃订单列表
+export function queryMyOrderList (params) {
+  return axios({
+    url: '/catering/order/queryMyOrderList/' + params.userKey + '/' + params.pageNum,
+    method: 'get'
+  })
+}
